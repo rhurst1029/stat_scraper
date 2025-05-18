@@ -79,52 +79,27 @@ graph TD
 ### Champions League Analysis
 [View Champions League Breakdown](https://public.tableau.com/app/profile/ryan.hurst/viz/ChampionsLeagueBreakdown2/OLYRECChampionsLeague)
 
-```mermaid
-graph TD
-    A[Champions League Analysis] --> B[Team Performance]
-    A --> C[Player Statistics]
-    A --> D[Match Analysis]
-```
+![Champions League Analysis](images/OLY%20REC%20Champions%20League%20(1).png)
 
 ### Champions League Matchup Analysis
 [View Champions League Matchup Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/MatchupAnalysisChampionsLeague/OLYRECChampionsLeague)
 
-```mermaid
-graph TD
-    A[Matchup Analysis] --> B[Head-to-Head]
-    A --> C[Historical Performance]
-    A --> D[Key Metrics]
-```
+![Champions League Matchup Analysis](images/OLY%20REC%20Champions%20League%20(2).png)
 
 ### Champions League Individual Contributions
 [View Individual Contributions Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/MatchupAnalysisChampionsLeague/OLYRECChampionsLeague)
 
-```mermaid
-graph TD
-    A[Individual Analysis] --> B[Player Stats]
-    A --> C[Performance Trends]
-    A --> D[Impact Metrics]
-```
+![Champions League Individual Contributions](images/Player%20Analysis%20(Champions%20League).png)
 
 ### World Championships 2024: Croatia vs Italy
 [View Croatia vs Italy Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/CroatiaVSItalyWorldChampionships2024/OLYRECChampionsLeague)
 
-```mermaid
-graph TD
-    A[World Championships] --> B[Match Statistics]
-    A --> C[Team Comparison]
-    A --> D[Key Moments]
-```
+![Croatia vs Italy Analysis](images/OLY%20REC%20Champions%20League%20(3).png)
 
 ### National League 2023 Breakdown
 [View National League 2023 Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/CroatiaVSItalyWorldChampionships2024/OLYRECChampionsLeague)
 
-```mermaid
-graph TD
-    A[National League] --> B[Season Overview]
-    A --> C[Team Rankings]
-    A --> D[Performance Analysis]
-```
+![National League 2023 Analysis](images/Channel%20Cats%20University_%20NL%202023.png)
 
 ## Setup and Installation
 
