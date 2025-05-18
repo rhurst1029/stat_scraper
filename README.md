@@ -79,17 +79,27 @@ graph TD
 ### Champions League Analysis
 [View Champions League Breakdown](https://public.tableau.com/app/profile/ryan.hurst/viz/ChampionsLeagueBreakdown2/OLYRECChampionsLeague)
 
+![Champions League Analysis](images/champions_league_analysis.png)
+
 ### Champions League Matchup Analysis
 [View Champions League Matchup Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/MatchupAnalysisChampionsLeague/OLYRECChampionsLeague)
+
+![Champions League Matchup Analysis](images/champions_league_matchup.png)
 
 ### Champions League Individual Contributions
 [View Individual Contributions Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/MatchupAnalysisChampionsLeague/OLYRECChampionsLeague)
 
+![Champions League Individual Contributions](images/champions_league_individual.png)
+
 ### World Championships 2024: Croatia vs Italy
 [View Croatia vs Italy Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/CroatiaVSItalyWorldChampionships2024/OLYRECChampionsLeague)
 
+![Croatia vs Italy Analysis](images/croatia_italy_analysis.png)
+
 ### National League 2023 Breakdown
 [View National League 2023 Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/CroatiaVSItalyWorldChampionships2024/OLYRECChampionsLeague)
+
+![National League 2023 Analysis](images/national_league_2023.png)
 
 ## Setup and Installation
 
