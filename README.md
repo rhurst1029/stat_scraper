@@ -77,19 +77,19 @@ graph TD
 ## Example Visualizations
 
 ### Champions League Analysis
-<iframe src="https://public.tableau.com/app/profile/ryan.hurst/viz/ChampionsLeagueBreakdown2/OLYRECChampionsLeague?:showVizHome=no&:embed=true" width="800" height="600"></iframe>
+[View Champions League Breakdown](https://public.tableau.com/app/profile/ryan.hurst/viz/ChampionsLeagueBreakdown2/OLYRECChampionsLeague)
 
 ### Champions League Matchup Analysis
-<iframe src="https://public.tableau.com/app/profile/ryan.hurst/viz/MatchupAnalysisChampionsLeague/OLYRECChampionsLeague?:showVizHome=no&:embed=true" width="800" height="600"></iframe>
+[View Champions League Matchup Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/MatchupAnalysisChampionsLeague/OLYRECChampionsLeague)
 
 ### Champions League Individual Contributions
-<iframe src="https://public.tableau.com/app/profile/ryan.hurst/viz/MatchupAnalysisChampionsLeague/OLYRECChampionsLeague?:showVizHome=no&:embed=true" width="800" height="600"></iframe>
+[View Individual Contributions Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/MatchupAnalysisChampionsLeague/OLYRECChampionsLeague)
 
 ### World Championships 2024: Croatia vs Italy
-<iframe src="https://public.tableau.com/app/profile/ryan.hurst/viz/CroatiaVSItalyWorldChampionships2024/OLYRECChampionsLeague?:showVizHome=no&:embed=true" width="800" height="600"></iframe>
+[View Croatia vs Italy Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/CroatiaVSItalyWorldChampionships2024/OLYRECChampionsLeague)
 
 ### National League 2023 Breakdown
-<iframe src="https://public.tableau.com/app/profile/ryan.hurst/viz/CroatiaVSItalyWorldChampionships2024/OLYRECChampionsLeague?:showVizHome=no&:embed=true" width="800" height="600"></iframe>
+[View National League 2023 Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/CroatiaVSItalyWorldChampionships2024/OLYRECChampionsLeague)
 
 ## Setup and Installation
 
