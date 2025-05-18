@@ -1,0 +1,133 @@
+# Excel files
+*.xlsx
+*.xls
+*.xlsm
+*.xlsb
+*.csv
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Project specific
+Champions_League_2025/
+final_outputs/
+teams/
+source_json_files/
+*.json
+chromedriver-mac-x64.zip
+
+# System files
+.Trash/
+.CFUserTextEncoding
+.DS_Store
+.Rhistory
+.aws/
+.conda/
+.config/
+.cups/
+.cursor/
+.dlv/
+.gitconfig*
+.idlerc/
+.ipython/
+.jupyter/
+.lesshst
+.local/
+.matplotlib/
+.npm/
+.npmrc
+.nvm/
+.pylint.d/
+.python_history
+.ssh/
+.viminfo
+.wdm/
+.yarnrc
+.zprofile
+.zsh_history
+.zsh_sessions/
+.zshrc
+
+# Application directories
+Applications/
+Creative Cloud Files/
+Documents/
+Downloads/
+Library/
+Movies/
+Music/
+Pictures/
+Public/
+
+# Development directories
+node_modules/
+anaconda3/
+go/
+nltk_data/
+uniEd/
+uniEd_beta1/
+uniEd_test/
+universalEd/ 
