@@ -124,20 +124,132 @@ pip install -r requirements.txt
 
 ## Usage
 
-1. Run TWP scraper:
-```bash
-python twp_scraper.py
-```
+### Setup
 
-2. Run 6-8 Sports scraper:
-```bash
-python 6_8_scraper.py
-```
+1. **Create and activate a virtual environment:**
+   ```bash
+   # Create virtual environment
+   python -m venv venv
+   
+   # Activate virtual environment
+   # On macOS/Linux:
+   source venv/bin/activate
+   # On Windows:
+   .\venv\Scripts\activate
+   
+   # Verify activation (should show path to venv)
+   which python  # macOS/Linux
+   where python  # Windows
+   ```
 
-3. Process data:
-```bash
-python twp_constructor.py
-```
+2. **Install dependencies:**
+   ```bash
+   # Upgrade pip first
+   python -m pip install --upgrade pip
+   
+   # Install dependencies
+   pip install -r requirements.txt
+   
+   # Verify installations
+   pip list
+   ```
+
+3. **ChromeDriver Setup:**
+   - Check your Chrome browser version:
+     - Open Chrome
+     - Click three dots (⋮) → Help → About Google Chrome
+     - Note the version number (e.g., 120.0.6099.109)
+   
+   - Download matching ChromeDriver:
+     - Visit [ChromeDriver Downloads](https://chromedriver.chromium.org/downloads)
+     - Select version matching your Chrome browser
+     - Download for your OS (macOS/Windows/Linux)
+   
+   - Installation:
+     ```bash
+     # macOS/Linux
+     # 1. Move to project directory
+     mv ~/Downloads/chromedriver ./chromedriver
+     
+     # 2. Make executable
+     chmod +x chromedriver
+     
+     # 3. Remove quarantine (macOS only)
+     xattr -d com.apple.quarantine chromedriver
+     
+     # Windows
+     # 1. Move chromedriver.exe to project directory
+     # 2. Add to PATH or use full path in code
+     ```
+
+### Troubleshooting
+
+1. **Virtual Environment Issues:**
+   ```bash
+   # If venv creation fails
+   python -m pip install --upgrade virtualenv
+   
+   # If activation fails
+   # macOS/Linux:
+   chmod +x venv/bin/activate
+   # Windows:
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   ```
+
+2. **ChromeDriver Issues:**
+   - Version mismatch:
+     ```bash
+     # Check Chrome version
+     # macOS:
+     /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version
+     # Windows:
+     reg query "HKEY_CURRENT_USER\Software\Google\Chrome\BLBeacon" /v version
+     ```
+   - Permission errors:
+     ```bash
+     # macOS/Linux
+     sudo chmod +x chromedriver
+     # Windows
+     # Run as administrator
+     ```
+   - Path issues:
+     ```bash
+     # Verify ChromeDriver location
+     which chromedriver  # macOS/Linux
+     where chromedriver  # Windows
+     ```
+
+3. **Package Installation Issues:**
+   ```bash
+   # Clear pip cache
+   pip cache purge
+   
+   # Force reinstall packages
+   pip install --force-reinstall -r requirements.txt
+   
+   # Install specific version if needed
+   pip install pandas==2.0.3
+   ```
+
+### Running the Scrapers
+
+1. **TWP Scraper:**
+   ```bash
+   # Ensure virtual environment is active
+   python twp_scraper.py
+   ```
+
+2. **6-8 Sports Scraper:**
+   ```bash
+   # Ensure virtual environment is active
+   python 6_8_scraper.py
+   ```
+
+3. **TWP Constructor:**
+   ```bash
+   # Ensure virtual environment is active
+   python twp_constructor.py
+   ```
 
 ## Visualization
 

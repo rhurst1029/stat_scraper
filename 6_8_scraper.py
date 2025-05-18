@@ -139,7 +139,7 @@ def accept_cookies(driver):
 
 if __name__ == "__main__":
 	# List of links to pull data from
-	lst = ['https://scores.6-8sports.com/unity/leagues/acd15793-2286-4f42-a58f-fd3e0b8179de/conferences/11376e6e-d5f6-48bb-a4f6-7403332f4016/teams/b72628df-e9f5-43da-a892-ad8fafba19a8/schedule?is_shared=True']
+	lst = ['https://scores.6-8sports.com/unity/leagues/6fd5663d-68e9-4f1f-95cc-34378de6a868/tournaments/2336fb8d-794e-4a3d-9a3d-42ec500e8f13/teams/136cc53e-b67b-4da9-8d28-46072047201f/schedule']
 	# Path for Chrome Driver
 	driver_path = '/Users/ryanhurst/Desktop/chromedriver_mac64/chromedriver'
 	for url in lst:
