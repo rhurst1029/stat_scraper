@@ -79,9 +79,9 @@ graph TD
 ### Champions League Analysis
 [View Champions League Breakdown](https://public.tableau.com/app/profile/ryan.hurst/viz/ChampionsLeagueBreakdown2/OLYRECChampionsLeague)
 
-![Champions League Analysis 1](images/OLY%20REC%20Champions%20League%20(1).png)
-![Champions League Analysis 2](images/OLY%20REC%20Champions%20League%20(2).png)
-![Champions League Analysis 3](images/OLY%20REC%20Champions%20League%20(3).png)
+![Champions League Analysis Part 1](images/CLB1.png)
+![Champions League Analysis Part 2](images/CLB2.png)
+![Champions League Analysis Part 3](images/CLB3.png)
 
 ### Champions League Individual Contributions
 [View Individual Contributions Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/MatchupAnalysisChampionsLeague/OLYRECChampionsLeague)
@@ -91,7 +91,8 @@ graph TD
 ### World Championships 2024: Croatia vs Italy
 [View Croatia vs Italy Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/CroatiaVSItalyWorldChampionships2024/OLYRECChampionsLeague)
 
-![Croatia vs Italy Analysis](images/OLY%20REC%20Champions%20League%20(3).png)
+![Croatia vs Italy Analysis Part 1](images/Croatia%20Italy%20(1).png)
+![Croatia vs Italy Analysis Part 2](images/Croatia%20Italy%20(2).png)
 
 ### National League 2023 Breakdown
 [View National League 2023 Analysis](https://public.tableau.com/app/profile/ryan.hurst/viz/CroatiaVSItalyWorldChampionships2024/OLYRECChampionsLeague)
