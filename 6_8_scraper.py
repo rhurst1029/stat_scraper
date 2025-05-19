@@ -94,7 +94,7 @@ def get_play_by_play(driver, match_date):
 			print(f'Exporting data for {game_name}')
 			# Clean the game name first, then use in f-string
 			clean_name = re.sub(r"\W+", "", game_name)
-			meta.to_excel(f'./{clean_name}_{match_date}.xlsx')
+			meta.to_excel(f'./{clean_name.replace("-", "")}_{match_date}.xlsx')
 		else:
 			print("No team data found, unable to export")
 			
@@ -106,7 +106,6 @@ def get_games(url, driver_path):
 	options = Options()
 	ua = UserAgent()
 	user_agent = ua.random
-	print(user_agent)
 
 	options.add_argument(f'user-agent={user_agent}')
 	driver = webdriver.Chrome(options=options)
@@ -115,85 +114,119 @@ def get_games(url, driver_path):
 	time.sleep(3)
 
 	try:
-		# Wait for page to load completely
-		wait = WebDriverWait(driver, 5)
+		wait = WebDriverWait(driver, 15)
 		
-		# Find all play-by-play buttons using both selectors
-		buttons = []
-		try:
-			buttons = wait.until(
-				EC.presence_of_all_elements_located((By.XPATH, "//a[contains(@class, 'play-btn ng-tns-c136-7')]"))
+		# Wait for the date selector to appear
+		date_selector = wait.until(EC.presence_of_element_located((
+			By.CSS_SELECTOR,
+			"azv-date-selector div"     # container for the calendar
+		)))
+
+		# Process each highlighted day
+		while True:
+			# Find current set of highlighted days
+			days = date_selector.find_elements(
+				By.CSS_SELECTOR,
+				"div.week-day.highlighted span.day"
 			)
-			print("Found buttons using primary selector")
-		except:
-			try:
-				buttons = wait.until(
-					EC.presence_of_all_elements_located((By.XPATH, "//*[contains(@class, 'button-container ng-star-inserted')]"))
-				)
-				print("Found buttons using secondary selector")
-			except:
-				print("No buttons found with either selector")
-				return
-		
-		# Get initial count of Play-by-Play buttons
-		play_by_play_count = len([b for b in buttons if 'Play-by' in b.text])
-		print(f"Found {play_by_play_count} Play-by-Play buttons")
-		
-		# Process each game
-		for game_num in range(play_by_play_count):
-			try:
-				print(f'Processing Game {game_num+1} of {play_by_play_count}')
-				
-				# Refresh button list after returning to main page
+			if not days:
+				break
+
+			for idx in range(len(days)):
 				try:
-					buttons = wait.until(
-						EC.presence_of_all_elements_located((By.XPATH, "//a[contains(@class, 'play-btn ng-tns-c136-7')]"))
+					# Re-locate days to avoid stale elements
+					days = date_selector.find_elements(
+						By.CSS_SELECTOR,
+						"div.week-day.highlighted span.day"
 					)
-				except:
-					buttons = wait.until(
-						EC.presence_of_all_elements_located((By.XPATH, "//*[contains(@class, 'button-container ng-star-inserted')]"))
-					)
-				
-				# Filter for Play-by-Play buttons
-				play_by_play_buttons = [b for b in buttons if 'Play-by' in b.text]
-				if not play_by_play_buttons:
-					print("No Play-by-Play buttons found after refresh")
+					btn = days[idx]
+					print(f"Processing date: {btn.text}")
+
+					# Scroll into view and click
+					driver.execute_script("arguments[0].scrollIntoView(true);", btn)
+					driver.execute_script("arguments[0].click();", btn)
+					time.sleep(2)  # Wait for schedule to load
+
+					# Wait for page to load completely
+					wait = WebDriverWait(driver, 5)
+					
+					# Find all play-by-play buttons using both selectors
+					buttons = []
+					try:
+						buttons = wait.until(
+							EC.presence_of_all_elements_located((By.XPATH, "//a[contains(@class, 'play-btn ng-tns-c136-7')]"))
+						)
+						print("Found buttons using primary selector")
+					except:
+						try:
+							buttons = wait.until(
+								EC.presence_of_all_elements_located((By.XPATH, "//*[contains(@class, 'button-container ng-star-inserted')]"))
+							)
+							print("Found buttons using secondary selector")
+						except:
+							print("No buttons found with either selector")
+							continue
+					
+					# Get initial count of Play-by-Play buttons
+					play_by_play_count = len([b for b in buttons if 'Play-by' in b.text])
+					print(f"Found {play_by_play_count} Play-by-Play buttons")
+					
+					# Process each game for this date
+					for game_num in range(play_by_play_count):
+						try:
+							print(f'Processing Game {game_num+1} of {play_by_play_count}')
+							
+							# Refresh button list
+							try:
+								buttons = wait.until(
+									EC.presence_of_all_elements_located((By.XPATH, "//a[contains(@class, 'play-btn ng-tns-c136-7')]"))
+								)
+							except:
+								buttons = wait.until(
+									EC.presence_of_all_elements_located((By.XPATH, "//*[contains(@class, 'button-container ng-star-inserted')]"))
+								)
+							
+							# Filter for Play-by-Play buttons
+							play_by_play_buttons = [b for b in buttons if 'Play-by' in b.text]
+							if not play_by_play_buttons:
+								print("No Play-by-Play buttons found after refresh")
+								continue
+							
+							button = play_by_play_buttons[game_num]
+							
+							# Get match date
+							try:
+								match_date = pd.to_datetime(btn.text).strftime("%Y%m%d")
+							except:
+								match_date = pd.to_datetime('today').strftime("%Y%m%d")
+							print(f"Processing game from {match_date}")
+							
+							# Scroll button into view and wait
+							driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", button)
+							time.sleep(1)
+							
+							# Verify button is clickable
+							wait.until(EC.element_to_be_clickable(button))
+							
+							# Click using JavaScript
+							driver.execute_script("arguments[0].click();", button)
+							time.sleep(2)
+							
+							# Process the play-by-play data
+							get_play_by_play(driver, match_date)
+							
+							# Return to schedule page
+							driver.get(url)
+							time.sleep(2)
+							
+						except Exception as e:
+							print(f"Error processing game {game_num+1}: {str(e).split('Stacktrace:')[0]}")
+							continue
+
+				except Exception as e:
+					print(f"Error processing date: {str(e).split('Stacktrace:')[0]}")
 					continue
-				
-				button = play_by_play_buttons[game_num]
-				
-				# Get dates for reference
-				dates = WebDriverWait(driver, 10).until(
-					EC.presence_of_all_elements_located((
-						By.XPATH, "//span[contains(@class,'date')]"
-					))
-				)
-				# Convert date to YYYYMMDD format
-				match_date = pd.to_datetime(dates[game_num].text).strftime("%Y%m%d")
-				print(f"Processing game from {match_date}")
-				
-				# Scroll button into view and wait
-				driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", button)
-				time.sleep(1)
-				
-				# Verify button is clickable
-				wait.until(EC.element_to_be_clickable(button))
-				
-				# Click using JavaScript
-				driver.execute_script("arguments[0].click();", button)
-				time.sleep(2)
-				
-				# Process the play-by-play data
-				get_play_by_play(driver, match_date)
-				
-				# Return to main page
-				driver.get(url)
-				time.sleep(2)
-				
-			except Exception as e:
-				print(f"Error processing game {game_num+1}: {str(e).split('Stacktrace:')[0]}")
-				continue
-				
+
 	except Exception as e:
 		print(f"Error in get_games: {str(e).split('Stacktrace:')[0]}")
 	finally:
@@ -205,7 +238,8 @@ def accept_cookies(driver):
 
 if __name__ == "__main__":
 	# List of links to pull data from
-	lst = ['https://scores.6-8sports.com/unity/leagues/6fd5663d-68e9-4f1f-95cc-34378de6a868/tournaments/2336fb8d-794e-4a3d-9a3d-42ec500e8f13/teams/136cc53e-b67b-4da9-8d28-46072047201f/schedule']
+	# lst = ['https://scores.6-8sports.com/unity/leagues/6fd5663d-68e9-4f1f-95cc-34378de6a868/tournaments/2336fb8d-794e-4a3d-9a3d-42ec500e8f13/teams/136cc53e-b67b-4da9-8d28-46072047201f/schedule']
+	lst = ['https://scores.6-8sports.com/unity/leagues/b9281e6c-c352-4f03-b8d8-955673df1c0d/schedule?season=d620e6c1-37e9-4e9d-88ba-a0f8564d5091']
 	# Path for Chrome Driver
 	driver_path = '/Users/ryanhurst/Desktop/chromedriver_mac64/chromedriver'
 	
