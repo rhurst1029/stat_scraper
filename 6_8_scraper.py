@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright, expect, TimeoutError as Playwri
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait # type: ignore
 from selenium.webdriver.support import expected_conditions as EC
 from fake_useragent import UserAgent
 from selenium.webdriver.chrome.options import Options
@@ -322,10 +322,12 @@ def accept_cookies(driver):
 if __name__ == "__main__":
 	# List of links to pull data from
 	# lst = ['https://scores.6-8sports.com/unity/leagues/6fd5663d-68e9-4f1f-95cc-34378de6a868/tournaments/2336fb8d-794e-4a3d-9a3d-42ec500e8f13/teams/136cc53e-b67b-4da9-8d28-46072047201f/schedule']
-	lst = ['https://scores.6-8sports.com/unity/leagues/ed3c47a9-d55f-4505-b7be-82dcbe1c693b/conferences/8df7f8c1-884a-47d3-961f-ceb69c3d859a/schedule/games/86b1d19c-eeef-4143-a8db-24408b644371/play-by-play?is_shared=True'
-		, 'https://scores.6-8sports.com/unity/leagues/ed3c47a9-d55f-4505-b7be-82dcbe1c693b/conferences/8df7f8c1-884a-47d3-961f-ceb69c3d859a/schedule/games/9cf059c0-a9dd-475b-a692-aa26fa8e41fe/play-by-play'
-		, 'https://scores.6-8sports.com/unity/leagues/ed3c47a9-d55f-4505-b7be-82dcbe1c693b/conferences/8df7f8c1-884a-47d3-961f-ceb69c3d859a/schedule/games/49ef5812-55e5-4ae0-9c36-abc8c5d3cb67/play-by-play']
-	
+	# lst = ['https://scores.6-8sports.com/unity/leagues/ed3c47a9-d55f-4505-b7be-82dcbe1c693b/conferences/8df7f8c1-884a-47d3-961f-ceb69c3d859a/schedule/games/86b1d19c-eeef-4143-a8db-24408b644371/play-by-play?is_shared=True'
+	# 	, 'https://scores.6-8sports.com/unity/leagues/ed3c47a9-d55f-4505-b7be-82dcbe1c693b/conferences/8df7f8c1-884a-47d3-961f-ceb69c3d859a/schedule/games/9cf059c0-a9dd-475b-a692-aa26fa8e41fe/play-by-play'
+	# 	, 'https://scores.6-8sports.com/unity/leagues/ed3c47a9-d55f-4505-b7be-82dcbe1c693b/conferences/8df7f8c1-884a-47d3-961f-ceb69c3d859a/schedule/games/49ef5812-55e5-4ae0-9c36-abc8c5d3cb67/play-by-play']
+	lst =[ 'https://scores.6-8sports.com/unity/leagues/52ce65b3-afdd-4ac8-86f2-d4f3bdaa8439/tournaments/ed213b32-cc68-4469-a893-f80f1d652483/teams/d7b96d80-c15f-4934-8034-a7ea2d44ef6c/schedule/games/3ef5433c-7cbe-4137-9b32-3839c9170c81/play-by-play'
+	   	, 'https://scores.6-8sports.com/unity/leagues/52ce65b3-afdd-4ac8-86f2-d4f3bdaa8439/tournaments/ed213b32-cc68-4469-a893-f80f1d652483/teams/d7b96d80-c15f-4934-8034-a7ea2d44ef6c/schedule/games/573c2982-fdee-4d72-97db-2ab6eb05cf05/play-by-play'
+		, 'https://scores.6-8sports.com/unity/leagues/52ce65b3-afdd-4ac8-86f2-d4f3bdaa8439/tournaments/ed213b32-cc68-4469-a893-f80f1d652483/teams/d7b96d80-c15f-4934-8034-a7ea2d44ef6c/schedule/games/3906603c-a590-4eda-ada7-f90229de9f5b/play-by-play']
 	# Path for Chrome Driver
 	driver_path = '/Users/ryanhurst/Desktop/chromedriver_mac64/chromedriver'
 	
