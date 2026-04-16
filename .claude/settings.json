@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"SESSION START PROTOCOL (CLAUDE.md enforcement): Read these files IN THIS ORDER before any response: (1) /Users/ryanhurst/Desktop/wp_scraper/PROGRESS.md (2) /Users/ryanhurst/Desktop/wp_scraper/TASKS.md (3) /Users/ryanhurst/Desktop/wp_scraper/PARKING_LOT.md (4) /Users/ryanhurst/Desktop/wp_scraper/DECISIONS.md. Then deliver a 3-bullet where-we-are briefing. Active spec: /Users/ryanhurst/Desktop/wp_scraper/claude/docs/superpowers/specs/2026-04-15-pacific-cup-dashboard-design.md. No code until planning phase is complete.\"}}'",
+            "statusMessage": "Loading project state..."
+          }
+        ]
+      }
+    ]
+  }
+}
