@@ -134,7 +134,7 @@ universalEd/
 
 # Do not ignore source/lib directories inside the React dashboard
 # (the root lib/ rule above is for Python venvs, not JS source code)
-!pacific-cup-dashboard/src/lib
-!pacific-cup-dashboard/src/lib/**
-!pacific-cup-dashboard/tests
-!pacific-cup-dashboard/tests/**
+!dashboard/src/lib
+!dashboard/src/lib/**
+!dashboard/tests
+!dashboard/tests/**
