@@ -109,9 +109,9 @@ export function parseWorkbook(wb: XLSX.WorkBook): AppData {
     score_diff_raw: Number(row.score_diff_raw ?? 0),
     score_diff_pre: row.score_diff_pre != null ? Number(row.score_diff_pre) : null,
     score_state: String(row.score_state ?? ''),
-    is_clutch: Boolean(row.is_clutch),
+    is_clutch: row.is_clutch === true || row.is_clutch === 1 || row.is_clutch === 'TRUE',
     event_type: String(row.event_type ?? ''),
-    is_penalty_attempt: Boolean(row.is_penalty_attempt),
+    is_penalty_attempt: row.is_penalty_attempt === true || row.is_penalty_attempt === 1 || row.is_penalty_attempt === 'TRUE',
   }))
 
   return { playerSummaries, teamMetrics, quarterSplits, scoreStateSplits, rawEvents }
