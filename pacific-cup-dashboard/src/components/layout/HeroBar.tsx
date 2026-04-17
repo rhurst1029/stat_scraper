@@ -1,18 +1,24 @@
 import { useAppStore } from '../../store/useAppStore'
-import { UCLA_TEAM } from '../../types'
+import { UCLA_TEAM, GAME_IDS, GAME_SCORES, GAME_LABELS } from '../../types'
 
-const GAME_RESULTS = [
-  { opp: 'UC Davis', score: 'W 14–7', win: true },
-  { opp: 'SJSU', score: 'W 11–10', win: true },
-  { opp: 'Stanford', score: 'L 11–12', win: false },
-]
+const GAME_RESULTS = GAME_IDS.map(id => {
+  const { uclaScore, oppScore, win } = GAME_SCORES[id]
+  const opp = GAME_LABELS[id].replace(/^vs /, '')
+  const prefix = win ? 'W' : 'L'
+  const score = `${prefix} ${uclaScore}–${oppScore}`
+  return { opp, score, win }
+})
 
 export default function HeroBar() {
   const data = useAppStore(s => s.data)
   const ucla = data?.teamMetrics.find(t => t.team === UCLA_TEAM)
 
+  const wins = GAME_IDS.filter(id => GAME_SCORES[id].win).length
+  const losses = GAME_IDS.length - wins
+  const record = `${wins}-${losses}`
+
   const stats = [
-    { val: '2-1', lbl: 'Record' },
+    { val: record, lbl: 'Record' },
     { val: ucla?.goals_total ?? '—', lbl: 'UCLA Goals' },
     { val: ucla ? `${(ucla.shot_pct * 100).toFixed(1)}%` : '—', lbl: 'Shot %' },
     { val: ucla?.steals ?? '—', lbl: 'Steals' },

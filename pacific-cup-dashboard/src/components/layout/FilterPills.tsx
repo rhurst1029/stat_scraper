@@ -9,7 +9,8 @@ const PILLS: { label: string; value: GameFilter }[] = [
 ]
 
 export default function FilterPills() {
-  const { gameFilter, setGameFilter } = useAppStore()
+  const gameFilter = useAppStore(s => s.gameFilter)
+  const setGameFilter = useAppStore(s => s.setGameFilter)
 
   return (
     <div className="bg-card-bg border-b border-border px-6 py-2 flex items-center gap-2">
