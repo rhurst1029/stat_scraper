@@ -76,8 +76,6 @@ Champions_League_2025/
 final_outputs/
 teams/
 source_json_files/
-*.json
-!.claude/settings.json
 chromedriver-mac-x64.zip
 
 # System files
