@@ -1,14 +1,12 @@
 import { useAppStore } from '../../store/useAppStore'
-import { UCLA_TEAM } from '../../types'
-
-const OPP_ORDER = ['UC Davis Aggies', 'SJSU Spartans', 'Stanford Cardinal']
+import { UCLA_TEAM, GAME_IDS, OPP_TEAMS } from '../../types'
 
 export default function ShotEfficiencyChart() {
   const data = useAppStore(s => s.data)
   const teams = data?.teamMetrics ?? []
 
   const ucla = teams.find(t => t.team === UCLA_TEAM)
-  const opponents = OPP_ORDER.map(name => teams.find(t => t.team === name)).filter(Boolean)
+  const opponents = GAME_IDS.map(id => teams.find(t => t.team === OPP_TEAMS[id])).filter(Boolean)
   const allTeams = [
     { team: 'UCLA Bruins', shot_pct: ucla?.shot_pct ?? 0, isUcla: true },
     ...opponents.map(t => ({ team: t!.team, shot_pct: t!.shot_pct, isUcla: false })),

@@ -120,5 +120,11 @@ export const GAME_SCORES: Record<GameId, { uclaScore: number; oppScore: number; 
   stanford: { uclaScore: 11, oppScore: 12, win: false },
 }
 
+export const OPP_TEAMS: Record<GameId, string> = {
+  ucdavis: 'UC Davis Aggies',
+  sjsu: 'SJSU Spartans',
+  stanford: 'Stanford Cardinal',
+}
+
 export const UCLA_TEAM = 'UCLA Bruins'
 export const GAME_IDS: GameId[] = ['ucdavis', 'sjsu', 'stanford']

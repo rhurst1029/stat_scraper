@@ -2,6 +2,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell
 import { useAppStore } from '../../store/useAppStore'
 import { UCLA_TEAM } from '../../types'
 
+
 const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4']
 
 export default function QuarterMomentumChart() {
@@ -15,11 +16,14 @@ export default function QuarterMomentumChart() {
     }),
   )
 
+  const oppTeams = new Set(splits.filter(r => r.team !== UCLA_TEAM).map(r => r.team))
+  const oppDivisor = Math.max(1, oppTeams.size)
+
   const oppByQ = Object.fromEntries(
     QUARTERS.map(q => {
       const oppRows = splits.filter(r => r.team !== UCLA_TEAM && r.quarter === q)
       const total = oppRows.reduce((sum, r) => sum + r.goals, 0)
-      return [q, Math.round((total / 3) * 10) / 10]
+      return [q, Math.round((total / oppDivisor) * 10) / 10]
     }),
   )
 
