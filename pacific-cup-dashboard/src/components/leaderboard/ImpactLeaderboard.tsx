@@ -11,7 +11,7 @@ export default function ImpactLeaderboard() {
     .filter(p => p.team === UCLA_TEAM)
     .sort((a, b) => b.impact - a.impact)
 
-  const maxImpact = players[0]?.impact ?? 1
+  const maxImpact = Math.max(players[0]?.impact ?? 1, 0.0001)
 
   return (
     <div className="bg-card-bg border border-border rounded-xl p-4">
@@ -63,7 +63,7 @@ export default function ImpactLeaderboard() {
                 <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-ucla-blue to-gold"
-                    style={{ width: `${(p.impact / maxImpact) * 100}%` }}
+                    style={{ width: `${Math.max(0, p.impact) / maxImpact * 100}%` }}
                   />
                 </div>
               </td>
