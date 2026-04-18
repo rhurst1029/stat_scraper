@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { FOCAL_TEAM_HEADER, TOURNAMENT_NAME } from '../../types'
 
 const TABS = [
   { label: 'Overview', to: '/' },
@@ -9,9 +10,9 @@ const TABS = [
 
 export default function NavBar() {
   return (
-    <nav className="bg-ucla-blue h-12 flex items-center justify-between px-6 sticky top-0 z-50">
+    <nav className="bg-focal-blue h-12 flex items-center justify-between px-6 sticky top-0 z-50">
       <span className="text-gold font-extrabold text-sm tracking-wide">
-        UCLA WATER POLO · Pacific Cup 2026
+        {FOCAL_TEAM_HEADER} · {TOURNAMENT_NAME}
       </span>
       <div className="flex gap-1">
         {TABS.map(({ label, to }) => (

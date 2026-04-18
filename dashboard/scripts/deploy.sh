@@ -28,7 +28,7 @@ cd "$DEPLOY_DIR"
 git init -q -b "$BRANCH"
 git add -A
 git -c user.name="Ryan Hurst" -c user.email="rhurst1029@gmail.com" \
-    commit -q -m "Deploy Pacific Cup Dashboard"
+    commit -q -m "Deploy tournament dashboard"
 git remote add origin "$REMOTE_URL"
 git push -f origin "$BRANCH"
 

@@ -96,8 +96,8 @@ From `dashboard/CLAUDE.md` §11 — these are canonical:
 
 1. **Selector-based Zustand access.** `useAppStore(s => s.data)`, never
    `const { data } = useAppStore()`.
-2. **Derive from canonical sources.** Don't hardcode UCLA-specific strings —
-   use `UCLA_TEAM`, `UCLA_IS_SCORE_A` from `src/types/index.ts`. The live
+2. **Derive from canonical sources.** Don't hardcode focal-team-specific strings —
+   use `FOCAL_TEAM`, `FOCAL_IS_SCORE_A` from `src/types/index.ts`. The live
    view does **not** rely on `GAME_IDS` / `GAME_SCORES` / `GAME_NAMES`
    because those are tournament-completed constants; in live mode the
    opponent is discovered from the data.
@@ -106,7 +106,7 @@ From `dashboard/CLAUDE.md` §11 — these are canonical:
 4. **TDD for `src/lib/*.ts`.** Every exported function needs a Vitest test
    in `tests/lib/`. Chart/UI components do not require unit tests.
 5. **Dark-theme Tailwind tokens only.** Use `bg-dark-bg`, `bg-card-bg`,
-   `border-border`, `text-muted`, `text-ucla-blue`, `text-gold`. No inline
+   `border-border`, `text-muted`, `text-focal-blue`, `text-gold`. No inline
    hex outside Recharts. Recharts hex values go in
    `src/theme/colors.ts` (Task 1 creates this if absent).
 6. **No new top-level dependencies** without logging rationale in

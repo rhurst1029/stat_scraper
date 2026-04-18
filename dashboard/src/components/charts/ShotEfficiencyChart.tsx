@@ -1,15 +1,15 @@
 import { useAppStore } from '../../store/useAppStore'
-import { UCLA_TEAM } from '../../types'
+import { FOCAL_TEAM } from '../../types'
 
 export default function ShotEfficiencyChart() {
   const data = useAppStore(s => s.data)
   const teams = data?.teamMetrics ?? []
 
-  const ucla = teams.find(t => t.team === UCLA_TEAM)
-  const opponents = teams.filter(t => t.team !== UCLA_TEAM)
+  const focal = teams.find(t => t.team === FOCAL_TEAM)
+  const opponents = teams.filter(t => t.team !== FOCAL_TEAM)
   const allTeams = [
-    { team: UCLA_TEAM, shot_pct: ucla?.shot_pct ?? 0, isUcla: true },
-    ...opponents.map(t => ({ team: t.team, shot_pct: t.shot_pct, isUcla: false })),
+    { team: FOCAL_TEAM, shot_pct: focal?.shot_pct ?? 0, isFocal: true },
+    ...opponents.map(t => ({ team: t.team, shot_pct: t.shot_pct, isFocal: false })),
   ]
 
   const maxPct = Math.max(...allTeams.map(t => t.shot_pct))
@@ -23,22 +23,22 @@ export default function ShotEfficiencyChart() {
         <div className="flex-1 h-px bg-border" />
       </div>
       <div className="flex flex-col gap-3">
-        {allTeams.map(({ team, shot_pct, isUcla }) => (
+        {allTeams.map(({ team, shot_pct, isFocal }) => (
           <div key={team}>
             <div className="flex justify-between items-baseline mb-1">
-              <span className={`text-xs font-semibold ${isUcla ? 'text-sky-300' : 'text-muted'}`}>
+              <span className={`text-xs font-semibold ${isFocal ? 'text-sky-300' : 'text-muted'}`}>
                 {team}
               </span>
-              <span className={`text-sm font-bold ${isUcla ? 'text-gold' : 'text-slate-400'}`}>
+              <span className={`text-sm font-bold ${isFocal ? 'text-gold' : 'text-slate-400'}`}>
                 {(shot_pct * 100).toFixed(1)}%
               </span>
             </div>
             <div className="h-2.5 bg-slate-700 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${
-                  isUcla
-                    ? 'bg-gradient-to-r from-ucla-blue to-sky-400'
-                    : shot_pct > (ucla?.shot_pct ?? 0)
+                  isFocal
+                    ? 'bg-gradient-to-r from-focal-blue to-sky-400'
+                    : shot_pct > (focal?.shot_pct ?? 0)
                     ? 'bg-red-800'
                     : 'bg-slate-600'
                 }`}

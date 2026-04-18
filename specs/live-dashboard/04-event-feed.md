@@ -124,7 +124,7 @@ Row layout (grid, not flex — easier to align):
 
 - `#`: `text-xs text-slate-500`.
 - `Q`: `text-xs text-muted`.
-- Team pill: UCLA → `bg-ucla-blue/20 text-sky-300`; opponent → `bg-slate-700 text-slate-300`.
+- Team pill: focal team → `bg-focal-blue/20 text-sky-300`; opponent → `bg-slate-700 text-slate-300`.
 - `cap`: `font-mono text-xs bg-card-bg border border-border rounded px-1`.
 - `player`: `text-sm`.
 - `glyph label`: glyph + space + label; sign class:
@@ -171,7 +171,7 @@ Behavior:
 - Visible only when `scrollTop > 50`.
 - Label: `↑ N new` (N = events since last view).
 - Click: scrolls the container to `top: 0, behavior: 'smooth'`.
-- Uses `bg-ucla-blue text-white shadow-lg`.
+- Uses `bg-focal-blue text-white shadow-lg`.
 
 ### 4.5 Empty state
 

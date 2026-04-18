@@ -108,17 +108,17 @@ export const GAME_LABELS: Record<GameId, string> = {
   stanford: 'vs Stanford',
 }
 
-// UCLA is score_b for ucdavis (listed second); score_a for the others
-export const UCLA_IS_SCORE_A: Record<GameId, boolean> = {
+// True when the focal team is listed first in the `game` column (i.e. `score_a`)
+export const FOCAL_IS_SCORE_A: Record<GameId, boolean> = {
   ucdavis: false,
   sjsu: true,
   stanford: true,
 }
 
-export const GAME_SCORES: Record<GameId, { uclaScore: number; oppScore: number; win: boolean }> = {
-  ucdavis: { uclaScore: 14, oppScore: 7, win: true },
-  sjsu: { uclaScore: 11, oppScore: 10, win: true },
-  stanford: { uclaScore: 11, oppScore: 12, win: false },
+export const GAME_SCORES: Record<GameId, { focalScore: number; oppScore: number; win: boolean }> = {
+  ucdavis: { focalScore: 14, oppScore: 7, win: true },
+  sjsu: { focalScore: 11, oppScore: 10, win: true },
+  stanford: { focalScore: 11, oppScore: 12, win: false },
 }
 
 export const OPP_TEAMS: Record<GameId, string> = {
@@ -127,5 +127,12 @@ export const OPP_TEAMS: Record<GameId, string> = {
   stanford: 'Stanford Cardinal',
 }
 
-export const UCLA_TEAM = 'UCLA Bruins'
+// The focal team the dashboard is configured around. Swap the value (and the
+// content of GAME_NAMES / OPP_TEAMS) to retarget the dashboard to a different
+// tournament.
+export const FOCAL_TEAM = 'UCLA Bruins'
+export const FOCAL_TEAM_SHORT = 'UCLA'
+export const FOCAL_TEAM_HEADER = 'UCLA WATER POLO'
+export const TOURNAMENT_NAME = 'Pacific Cup 2026'
+
 export const GAME_IDS: GameId[] = ['ucdavis', 'sjsu', 'stanford']

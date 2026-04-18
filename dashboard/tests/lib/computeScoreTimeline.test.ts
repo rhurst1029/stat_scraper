@@ -21,9 +21,9 @@ function makeGame(overrides: Partial<LiveGame>): LiveGame {
   return {
     gameId: 'sjsu',
     title: 'UCLA Bruins VS SJSU Spartans',
-    uclaIsScoreA: true,
+    focalIsScoreA: true,
     isLive: false,
-    uclaScore: 0,
+    focalScore: 0,
     oppScore: 0,
     oppTeam: 'SJSU Spartans',
     ...overrides,
@@ -50,7 +50,7 @@ describe('computeScoreTimeline', () => {
     const game = makeGame({
       gameId: 'ucdavis',
       title: 'UC Davis Aggies VS UCLA Bruins',
-      uclaIsScoreA: false,
+      focalIsScoreA: false,
       oppTeam: 'UC Davis Aggies',
     })
     const events: RawEvent[] = [

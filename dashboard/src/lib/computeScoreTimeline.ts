@@ -3,7 +3,7 @@ import type { LiveGame } from './gamesFromData'
 
 export interface TimelinePoint {
   eventIndex: number
-  scoreDiff: number  // positive = UCLA leading
+  scoreDiff: number  // positive = focal team leading
 }
 
 export function computeScoreTimeline(events: RawEvent[], game: LiveGame): TimelinePoint[] {
@@ -18,7 +18,7 @@ export function computeScoreTimeline(events: RawEvent[], game: LiveGame): Timeli
   scoringEvents.forEach((e, i) => {
     points.push({
       eventIndex: i + 1,
-      scoreDiff: game.uclaIsScoreA ? e.score_a - e.score_b : e.score_b - e.score_a,
+      scoreDiff: game.focalIsScoreA ? e.score_a - e.score_b : e.score_b - e.score_a,
     })
   })
 

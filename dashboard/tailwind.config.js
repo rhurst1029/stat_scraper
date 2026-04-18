@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        'ucla-blue': '#2774AE',
+        'focal-blue': '#2774AE',
         gold: '#FFD100',
         'dark-bg': '#0f172a',
         'card-bg': '#1e293b',

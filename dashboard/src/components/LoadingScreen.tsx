@@ -1,3 +1,5 @@
+import { FOCAL_TEAM_HEADER } from '../types'
+
 interface Props {
   error: string | null
 }
@@ -12,7 +14,7 @@ export default function LoadingScreen({ error }: Props) {
         </div>
       ) : (
         <div className="text-center">
-          <div className="text-gold text-xl font-bold mb-2">UCLA Water Polo</div>
+          <div className="text-gold text-xl font-bold mb-2">{FOCAL_TEAM_HEADER}</div>
           <p className="text-muted text-sm">Loading tournament data...</p>
         </div>
       )}

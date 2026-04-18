@@ -2,7 +2,7 @@
 
 A coach-grade water polo analytics dashboard for a single tournament (N games of a focal team vs opponents). Static single-page React app, deployed to GitHub Pages, loading `PERFORMANCE_REPORT.xlsx` client-side via SheetJS. This file is the single source of truth for design, implementation, and ops.
 
-> **Terminology used in this doc:** `Team1` is the focal team being analyzed. `Team2`, `Team3`, `Team4`, … are its opponents in the tournament, in schedule order. Specific tournament configuration (names, schedules, scores) lives in `src/types/index.ts` — swap the values there to retarget the dashboard to a different tournament.
+> **Terminology used in this doc:** prose refers to the focal team generically ("Team1") and to opponents as "Team2/Team3/Team4". Code is team-agnostic by convention — identifiers use `FOCAL_*` prefixes (e.g. `FOCAL_TEAM`, `FOCAL_IS_SCORE_A`, `focalScore`, `focal-blue`) and the current tournament's real team names live only as _values_ in `src/types/index.ts` (`FOCAL_TEAM = 'UCLA Bruins'`, `TOURNAMENT_NAME = 'Pacific Cup 2026'`, etc.) and as color hex values in `tailwind.config.js`. To retarget to a different tournament, edit only those values.
 
 ---
 
@@ -55,12 +55,12 @@ Deployment:  Custom scripts/deploy.sh — clean orphan branch force-push to gh-p
 Palette (defined in `tailwind.config.js`):
 
 ```
-primary-blue:  #2774AE   ← focal team accent (named `ucla-blue` in the current config; rename if retargeting)
-gold:          #FFD100
-dark-bg:       #0f172a
-card-bg:       #1e293b
-border:        #334155
-muted:         #94a3b8
+focal-blue:  #2774AE   ← focal-team accent (currently UCLA blue; change the hex to retarget)
+gold:        #FFD100
+dark-bg:     #0f172a
+card-bg:     #1e293b
+border:      #334155
+muted:       #94a3b8
 ```
 
 ---
@@ -87,7 +87,7 @@ dashboard/
       LoadingScreen.tsx
       layout/
         NavBar.tsx                   ← sticky nav + tabs
-        FilterPills.tsx              ← All / vs Team2 / vs Team3 / vs Team4
+        FilterPills.tsx              ← All / vs UC Davis / vs SJSU / vs Stanford
         HeroBar.tsx                  ← Record, Goals, Shot%, Steals, Saves, Earned Excl.
       leaderboard/
         RoleBadge.tsx
@@ -167,23 +167,27 @@ interface AppData {
   rawEvents: RawEvent[];
 }
 
-type GameId = 'game1' | 'game2' | 'game3';   // one slug per game in the tournament
+type GameId = 'ucdavis' | 'sjsu' | 'stanford';   // one slug per game in the tournament
 ```
 
 Canonical tournament-config constants (also in `src/types/index.ts`):
 
 ```typescript
-GAME_IDS:   ['game1', 'game2', 'game3']
-GAME_NAMES: { game1: 'Team2 VS Team1',
-              game2: 'Team1 VS Team3',
-              game3: 'Team1 VS Team4' }
-GAME_LABELS: { game1: 'vs Team2', game2: 'vs Team3', game3: 'vs Team4' }
-FOCAL_IS_SCORE_A: { game1: false, game2: true, game3: true }  // is Team1 `score_a` in this game?
-GAME_SCORES: { game1: { focalScore: 14, oppScore: 7,  win: true  },
-               game2: { focalScore: 11, oppScore: 10, win: true  },
-               game3: { focalScore: 11, oppScore: 12, win: false } }
-OPP_TEAMS:   { game1: 'Team2', game2: 'Team3', game3: 'Team4' }
-FOCAL_TEAM:  'Team1'
+GAME_IDS:   ['ucdavis', 'sjsu', 'stanford']
+GAME_NAMES: { ucdavis: 'UC Davis Aggies VS UCLA Bruins',
+              sjsu: 'UCLA Bruins VS SJSU Spartans',
+              stanford: 'UCLA Bruins VS Stanford Cardinal' }
+GAME_LABELS: { ucdavis: 'vs UC Davis', sjsu: 'vs SJSU', stanford: 'vs Stanford' }
+FOCAL_IS_SCORE_A: { ucdavis: false, sjsu: true, stanford: true }
+GAME_SCORES: { ucdavis: { focalScore: 14, oppScore: 7,  win: true  },
+               sjsu:    { focalScore: 11, oppScore: 10, win: true  },
+               stanford:{ focalScore: 11, oppScore: 12, win: false } }
+OPP_TEAMS:   { ucdavis: 'UC Davis Aggies', sjsu: 'SJSU Spartans',
+               stanford: 'Stanford Cardinal' }
+FOCAL_TEAM:          'UCLA Bruins'
+FOCAL_TEAM_SHORT:    'UCLA'            // used in chart labels ("UCLA Goals", etc.)
+FOCAL_TEAM_HEADER:   'UCLA WATER POLO' // used in NavBar branding + LoadingScreen
+TOURNAMENT_NAME:     'Pacific Cup 2026'
 ```
 
 ### Derived data
@@ -242,7 +246,7 @@ Game View (/game/:gameId)
 └── Top nav / breadcrumb             → Overview or Games list
 
 Player Profile (/player/:name)
-├── "Game: vs Team4" segment bar     → /game/game3
+├── "Game: vs Team4" segment bar     → /game/stanford
 ├── Event in event feed              → /play-by-play?player=X&game=Y
 └── Top nav / breadcrumb             → Overview or Players list
 
@@ -273,7 +277,7 @@ Single-column scroll. Sections in order:
 
 ### 7.2 Game View (Phase 2)
 
-One page per game. Tab strip at top. `gameId` slugs come from `GAME_IDS`.
+One page per game. Tab strip at top. `gameId` slugs come from `GAME_IDS` (currently `ucdavis | sjsu | stanford`).
 
 - **Game Header** — `Team1 13 — Team2 7` score, shot% Team1 vs opponent, steals (possession proxy), earned exclusions converted.
 - **Win Probability Timeline (full-width)** — Recharts `LineChart` of running `score_diff`, normalized. Features:
@@ -290,7 +294,7 @@ One page per game. Tab strip at top. `gameId` slugs come from `GAME_IDS`.
 Focal-team roster is derived from data, filtering `rawEvents` where `team == FOCAL_TEAM`.
 
 - **Player Header** — name, cap number (from raw events, not summary), role badges, large Impact Score, offense/defense split side by side.
-- **Radar Chart** — 6 axes, player polygon (primary blue, 40% opacity) vs team average (gold dashed outline):
+- **Radar Chart** — 6 axes, player polygon (focal-blue, 40% opacity) vs team average (gold dashed outline):
   1. Shooting Efficiency — `non_pen_pct / max_non_pen_pct`
   2. Shot Volume — `shots / max_shots`
   3. Defensive Disruption — `(steals + field_blocks) / max`
@@ -393,7 +397,7 @@ Rolling 5-event window across a game:
 momentum[i] = sum(impact_weights[i-4:i+1])  for Team1 events only
 ```
 
-Line chart, primary blue. Companion line for opponent momentum. Crossover points circled.
+Line chart, focal-blue. Companion line for opponent momentum. Crossover points circled.
 
 ### 10.5 Clutch Performer Index
 
@@ -522,7 +526,7 @@ The site is served at `https://rhurst1029.github.io/stat_scraper/` — the `stat
 5. **Phase 1 patterns are canonical.** New phases should match existing conventions (selector-based store access, derive-from-canonical, guarded math, TDD for lib modules).
 6. **Per-game player stats must be derived** — the xlsx only has tournament-aggregate player stats. Per-game requires filtering `rawEvents` by `game` + `event_type`.
 7. **Time data is sparse** — most rows show `--:--`. Charts use event-index as X-axis, not clock time.
-8. **Routing basename** — `/stat_scraper`. Game IDs are slugs drawn from `GAME_IDS`.
+8. **Routing basename** — `/stat_scraper`. Game IDs are slugs drawn from `GAME_IDS` (currently `ucdavis`, `sjsu`, `stanford`).
 9. **gh-pages is force-pushed on every deploy** — don't store anything there that needs to survive.
 
 ---

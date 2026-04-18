@@ -21,7 +21,7 @@ describe('extractGames', () => {
     expect(extractGames([])).toEqual([])
   })
 
-  it('parses UCLA-first title (SJSU format)', () => {
+  it('parses focal-team-first title (SJSU format)', () => {
     const events: RawEvent[] = [
       makeEvent({ game: 'UCLA Bruins VS SJSU Spartans' }),
     ]
@@ -29,7 +29,7 @@ describe('extractGames', () => {
     expect(result).toHaveLength(1)
     expect(result[0]).toMatchObject({
       title: 'UCLA Bruins VS SJSU Spartans',
-      uclaIsScoreA: true,
+      focalIsScoreA: true,
       oppTeam: 'SJSU Spartans',
       gameId: 'sjsu',
       isLive: true,
@@ -42,7 +42,7 @@ describe('extractGames', () => {
     ]
     const result = extractGames(events)
     expect(result[0]).toMatchObject({
-      uclaIsScoreA: false,
+      focalIsScoreA: false,
       oppTeam: 'UC Davis Aggies',
       gameId: 'ucdavis',
     })
@@ -55,7 +55,7 @@ describe('extractGames', () => {
       makeEvent({ game: 'UCLA Bruins VS SJSU Spartans', score_a: 11, score_b: 10 }),
     ]
     const result = extractGames(events)
-    expect(result[0].uclaScore).toBe(11)
+    expect(result[0].focalScore).toBe(11)
     expect(result[0].oppScore).toBe(10)
   })
 
@@ -79,13 +79,13 @@ describe('extractGames', () => {
     expect(result[0].oppTeam).toBe('Cal Poly SLO')
   })
 
-  it('uclaScore assignment respects uclaIsScoreA', () => {
+  it('focalScore assignment respects focalIsScoreA flag', () => {
     const events: RawEvent[] = [
       makeEvent({ game: 'UC Davis Aggies VS UCLA Bruins', score_a: 7, score_b: 14 }),
     ]
     const result = extractGames(events)
-    expect(result[0].uclaIsScoreA).toBe(false)
-    expect(result[0].uclaScore).toBe(14)
+    expect(result[0].focalIsScoreA).toBe(false)
+    expect(result[0].focalScore).toBe(14)
     expect(result[0].oppScore).toBe(7)
   })
 })

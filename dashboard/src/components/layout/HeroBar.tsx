@@ -1,24 +1,24 @@
 import { useAppStore } from '../../store/useAppStore'
-import { UCLA_TEAM } from '../../types'
+import { FOCAL_TEAM, FOCAL_TEAM_SHORT } from '../../types'
 import { extractGames } from '../../lib/gamesFromData'
 
 export default function HeroBar() {
   const data = useAppStore(s => s.data)
-  const ucla = data?.teamMetrics.find(t => t.team === UCLA_TEAM)
+  const focal = data?.teamMetrics.find(t => t.team === FOCAL_TEAM)
   const games = data ? extractGames(data.rawEvents) : []
 
   const finalGames = games.filter(g => !g.isLive)
-  const wins = finalGames.filter(g => g.uclaScore > g.oppScore).length
+  const wins = finalGames.filter(g => g.focalScore > g.oppScore).length
   const losses = finalGames.length - wins
   const record = finalGames.length ? `${wins}-${losses}` : '—'
 
   const stats = [
     { val: record, lbl: 'Record' },
-    { val: ucla?.goals_total ?? '—', lbl: 'UCLA Goals' },
-    { val: ucla ? `${(ucla.shot_pct * 100).toFixed(1)}%` : '—', lbl: 'Shot %' },
-    { val: ucla?.steals ?? '—', lbl: 'Steals' },
-    { val: ucla?.saves ?? '—', lbl: 'Saves' },
-    { val: ucla?.earned_exclusions ?? '—', lbl: 'Earned Excl.' },
+    { val: focal?.goals_total ?? '—', lbl: `${FOCAL_TEAM_SHORT} Goals` },
+    { val: focal ? `${(focal.shot_pct * 100).toFixed(1)}%` : '—', lbl: 'Shot %' },
+    { val: focal?.steals ?? '—', lbl: 'Steals' },
+    { val: focal?.saves ?? '—', lbl: 'Saves' },
+    { val: focal?.earned_exclusions ?? '—', lbl: 'Earned Excl.' },
   ]
 
   return (
@@ -32,9 +32,9 @@ export default function HeroBar() {
       {games.length > 0 && <div className="h-9 w-px bg-border mx-2" />}
       <div className="flex gap-3">
         {games.map(g => {
-          const win = g.uclaScore > g.oppScore
+          const win = g.focalScore > g.oppScore
           const prefix = g.isLive ? 'LIVE' : win ? 'W' : 'L'
-          const score = `${prefix} ${g.uclaScore}–${g.oppScore}`
+          const score = `${prefix} ${g.focalScore}–${g.oppScore}`
           const cls = g.isLive
             ? 'bg-sky-900/40 text-sky-300'
             : win

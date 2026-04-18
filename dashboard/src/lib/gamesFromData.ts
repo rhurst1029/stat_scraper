@@ -1,11 +1,12 @@
 import type { RawEvent } from '../types'
+import { FOCAL_TEAM } from '../types'
 
 export interface LiveGame {
   gameId: string
   title: string
-  uclaIsScoreA: boolean
+  focalIsScoreA: boolean
   isLive: boolean
-  uclaScore: number
+  focalScore: number
   oppScore: number
   oppTeam: string
 }
@@ -33,9 +34,9 @@ export function extractGames(rawEvents: RawEvent[]): LiveGame[] {
   }
 
   return titles.map(title => {
-    const uclaIsScoreA = title.startsWith('UCLA Bruins')
+    const focalIsScoreA = title.startsWith(FOCAL_TEAM)
     const [firstHalf, secondHalf] = title.split(' VS ')
-    const oppTeam = (uclaIsScoreA ? secondHalf : firstHalf).trim()
+    const oppTeam = (focalIsScoreA ? secondHalf : firstHalf).trim()
     const gameId = slugify(oppTeam)
 
     const events = eventsByTitle.get(title)!
@@ -53,11 +54,11 @@ export function extractGames(rawEvents: RawEvent[]): LiveGame[] {
     return {
       gameId,
       title,
-      uclaIsScoreA,
+      focalIsScoreA,
       // TODO: detect end-of-game (Q4 + no events for N seconds) to flip isLive=false; out of scope for v1.
       isLive: true,
-      uclaScore: uclaIsScoreA ? lastA : lastB,
-      oppScore: uclaIsScoreA ? lastB : lastA,
+      focalScore: focalIsScoreA ? lastA : lastB,
+      oppScore: focalIsScoreA ? lastB : lastA,
       oppTeam,
     }
   })

@@ -274,7 +274,7 @@ it's this.**
 
 - Big score. Period + remaining time (if available; else "Q3").
 - Full-width score-diff polyline (reuse `GameCard.tsx` SVG pattern, scaled up).
-  Zero line in slate-500. Team1-leading region tinted primary blue at 8% opacity,
+  Zero line in slate-500. Team1-leading region tinted focal-blue at 8% opacity,
   trailing region tinted red at 8% opacity.
 - **Most recent 3 events** as a ribbon of colored pills below the line (green
   goal, red miss, blue steal, amber exclusion). Each pill: player last name +
@@ -312,7 +312,7 @@ it's this.**
 ### 5.3 LIVE EVENT FEED (below Right-Now, scrollable, 400 px tall)
 
 - Reverse-chronological. **New events animate in from the top.**
-- Each row: time (or event #) · quarter · team pill (Team1 primary blue / opponent
+- Each row: time (or event #) · quarter · team pill (Team1 focal-blue / opponent
   neutral) · cap # · player · event glyph + label · score after · impact
   delta.
 - Clutch events have a gold left border. Clicking a row *in the live view* does
@@ -344,7 +344,7 @@ Q3   Team1 4/5 (80%) ●  Team2 3/5 (60%)    Δ +1  ← current (live pulse)
 Q4   —                  —                   —
 ```
 
-Current quarter gets a soft primary-blue pulse animation. Completed quarters that
+Current quarter gets a soft focal-blue pulse animation. Completed quarters that
 Team1 won get a green tick, lost get a red cross. Hover on any completed
 quarter → tooltip with earned exclusions, steals, field blocks for that Q.
 
@@ -459,7 +459,7 @@ behind the scenes and design the client to be robust to that.
 - `computeScoreTimeline.ts`
 - `gamesFromData.ts` (the `isLive` flag is already there)
 - `RoleBadge.tsx`
-- Tailwind theme tokens (primary blue, `gold`, `dark-bg`, `card-bg`, etc.)
+- Tailwind theme tokens (`focal-blue`, `gold`, `dark-bg`, `card-bg`, etc.)
 - Impact leaderboard row layout
 
 **Extend:**
@@ -577,7 +577,7 @@ Live-specific additions:
 - **Red and green are reserved.** Don't use them for decoration. Red means
   "Team1 is in trouble" — cold shooting, opponent surge, foul trouble, stale
   data. Green means "Team1 is winning this moment" — run fire, momentum up,
-  quarter won. Primary blue is the neutral accent.
+  quarter won. `focal-blue` is the neutral accent.
 - **Gold is for clutch + peak.** Clutch rail, best quarter, hot player top-line.
   Use sparingly — it loses meaning if it's on every row.
 - **Dark theme only.** `bg-dark-bg` (`#0f172a`) page, `bg-card-bg` (`#1e293b`)
@@ -723,7 +723,7 @@ is_penalty_attempt  Flag — includes made + missed penalties.
 ## Appendix C — Focal-Team Palette (reuse from `tailwind.config.js`)
 
 ```
-primary-blue: #2774AE   ← primary accent, Team1-leading band, live pulse
+focal-blue:    #2774AE   ← primary accent, Team1-leading band, live pulse
 gold:         #FFD100   ← clutch, hot, peak callouts
 dark-bg:      #0f172a   ← page background
 card-bg:      #1e293b   ← card surface

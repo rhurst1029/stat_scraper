@@ -98,7 +98,7 @@ export interface MomentumWindow {
 }
 
 export function rollingMomentum(
-  uclaEvents: RawEvent[],
+  focalEvents: RawEvent[],
   windowSize?: number,     // default 5
 ): MomentumWindow[]
 
@@ -111,7 +111,7 @@ export interface HotPlayer {
 }
 
 export function hotPlayers(
-  uclaEvents: RawEvent[],
+  focalEvents: RawEvent[],
   horizon?: number,        // default 20 events
   topN?: number,           // default 3
 ): HotPlayer[]
@@ -134,7 +134,7 @@ export interface Run {
 }
 
 export function detectRun(
-  uclaEvents: RawEvent[],
+  focalEvents: RawEvent[],
   minLength?: number,      // default 3
 ): Run | null   // current ongoing run, or null
 ```
@@ -152,19 +152,19 @@ export function detectRun(
 - Returns `rawEvents.filter(e => e.game === liveGame.title)`.
 - One-liner, but wrapped so Tasks 03 and 04 don't re-invent it.
 
-**`rollingMomentum(uclaEvents, windowSize = 5)`:**
+**`rollingMomentum(focalEvents, windowSize = 5)`:**
 
-- Input: UCLA-only, chronologically-ordered events.
+- Input: focal-team-only, chronologically-ordered events.
 - Output: one `MomentumWindow` per event index. For the first `windowSize-1`
   events, `value` is the partial sum (not zero) and `contributingEvents` < windowSize.
 - `value` = sum of `impactWeight(e.event_type)` for the last N events.
 - Empty input → `[]`.
 - Never throws.
 
-**`hotPlayers(uclaEvents, horizon = 20, topN = 3)`:**
+**`hotPlayers(focalEvents, horizon = 20, topN = 3)`:**
 
-- Input: UCLA-only events.
-- Takes the last `min(horizon, uclaEvents.length)` events.
+- Input: focal-team-only events.
+- Takes the last `min(horizon, focalEvents.length)` events.
 - Groups by `player_name`, sums `impactWeight`, counts events.
 - Returns top `topN` by `impactDelta` descending, ties broken by `eventCount`.
 - **If the full game has < 10 events total (not just in horizon), return `[]`.**
@@ -178,9 +178,9 @@ export function detectRun(
   the number of events in that quarter.
 - Empty game → `{ quarter: 'Unknown', eventCount: 0 }`.
 
-**`detectRun(uclaEvents, minLength = 3)`:**
+**`detectRun(focalEvents, minLength = 3)`:**
 
-- Walk from the end of `uclaEvents` back while `impactWeight > 0`.
+- Walk from the end of `focalEvents` back while `impactWeight > 0`.
 - If the suffix length `>= minLength`, return a `Run` with that suffix's
   bounds and summed impact.
 - Otherwise return `null`.

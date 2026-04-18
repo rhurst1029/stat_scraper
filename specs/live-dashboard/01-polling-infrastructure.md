@@ -183,7 +183,7 @@ export default function LiveGame() {
 ```ts
 // Single source of truth. Matches tailwind.config.js tokens.
 export const colors = {
-  uclaBlue: '#2774AE',
+  focalBlue: '#2774AE',
   gold:     '#FFD100',
   darkBg:   '#0f172a',
   cardBg:   '#1e293b',
@@ -291,7 +291,7 @@ Flag as BLOCKING if any:
 - Polling keeps running after `unmount` (verify cleanup in the hook).
 - `cache: 'no-store'` missing on the `fetch` call — GitHub Pages will cache.
 - No divide-by-zero guards on derived staleness values.
-- Hardcoded UCLA-specific strings outside `src/types/index.ts`.
+- Hardcoded focal-team-specific strings outside `src/types/index.ts`.
 - Any file modified outside §3.2 list (unless logged in `PARKING_LOT.md`).
 
 Flag as SUGGESTION (non-blocking): inline-style Tailwind class soup, unclear

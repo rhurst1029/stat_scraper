@@ -37,7 +37,7 @@ Ideas, bugs, tangents, future work. Capture everything. Nothing gets lost here.
 
 - **`FilterPills` aria-pressed** — toggle buttons lack `aria-pressed`, so screen-reader users can't tell which filter is active from color alone. Add `aria-pressed={gameFilter === value}` or promote to `role="radiogroup"` + `role="radio"`.
 
-- **HeroBar gradient magic hex** — `from-[#1e3a5f]` is an inline arbitrary color while everything else uses theme tokens. Add a `ucla-blue-dark` token in `tailwind.config.js` or swap for an existing token.
+- **HeroBar gradient magic hex** — `from-[#1e3a5f]` is an inline arbitrary color while everything else uses theme tokens. Add a `focal-blue-dark` token in `tailwind.config.js` or swap for an existing token.
 
 - **FilterPills hover token drift** — `hover:text-sky-300` uses the raw Tailwind palette while the rest of the file uses theme tokens. Minor inconsistency; consider a named token.
 

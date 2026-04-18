@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '../../store/useAppStore'
 import { computeScoreTimeline } from '../../lib/computeScoreTimeline'
 import type { LiveGame } from '../../lib/gamesFromData'
-import { UCLA_TEAM } from '../../types'
+import { FOCAL_TEAM } from '../../types'
 
 interface Props {
   game: LiveGame
@@ -11,8 +11,8 @@ interface Props {
 export default function GameCard({ game }: Props) {
   const navigate = useNavigate()
   const data = useAppStore(s => s.data)
-  const { gameId, title, uclaScore, oppScore, oppTeam, isLive } = game
-  const win = uclaScore > oppScore
+  const { gameId, title, focalScore, oppScore, oppTeam, isLive } = game
+  const win = focalScore > oppScore
   const resultClass = isLive ? 'text-sky-400' : win ? 'text-green-400' : 'text-red-400'
   const badgeClass = isLive
     ? 'bg-sky-900/40 text-sky-300 border-sky-900'
@@ -38,10 +38,10 @@ export default function GameCard({ game }: Props) {
     : `0,${mid} ${W},${mid}`
 
   const gameEvents = data?.rawEvents.filter(e => e.game === title) ?? []
-  const uclaEvents = gameEvents.filter(e => e.team === UCLA_TEAM)
-  const goals = uclaEvents.filter(e => e.event_type === 'goal' || e.event_type === 'goal_penalty').length
-  const steals = uclaEvents.filter(e => e.event_type === 'steal').length
-  const shots = uclaEvents.filter(e =>
+  const focalEvents = gameEvents.filter(e => e.team === FOCAL_TEAM)
+  const goals = focalEvents.filter(e => e.event_type === 'goal' || e.event_type === 'goal_penalty').length
+  const steals = focalEvents.filter(e => e.event_type === 'steal').length
+  const shots = focalEvents.filter(e =>
     ['goal', 'goal_penalty', 'miss', 'miss_penalty'].includes(e.event_type)
   ).length
   const shotPct = shots > 0 ? ((goals / shots) * 100).toFixed(1) + '%' : '—'
@@ -51,13 +51,13 @@ export default function GameCard({ game }: Props) {
   return (
     <div
       onClick={() => navigate(`/game/${gameId}`)}
-      className="bg-dark-bg border border-border rounded-xl p-3 cursor-pointer hover:border-ucla-blue transition-colors group"
+      className="bg-dark-bg border border-border rounded-xl p-3 cursor-pointer hover:border-focal-blue transition-colors group"
     >
       <div className="flex justify-between items-start mb-2">
         <div>
           <div className="text-xs font-bold text-muted">vs {oppTeam}</div>
           <div className={`text-xl font-extrabold ${resultClass}`}>
-            {uclaScore} – {oppScore}
+            {focalScore} – {oppScore}
           </div>
         </div>
         <span className={`text-xs font-bold px-2 py-0.5 rounded border ${badgeClass}`}>
@@ -103,7 +103,7 @@ export default function GameCard({ game }: Props) {
         ))}
       </div>
 
-      <div className="text-[9px] text-center text-slate-600 mt-2 group-hover:text-ucla-blue transition-colors">
+      <div className="text-[9px] text-center text-slate-600 mt-2 group-hover:text-focal-blue transition-colors">
         Click to view game →
       </div>
     </div>

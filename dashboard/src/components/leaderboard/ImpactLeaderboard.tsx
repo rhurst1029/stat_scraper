@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '../../store/useAppStore'
-import { UCLA_TEAM } from '../../types'
+import { FOCAL_TEAM } from '../../types'
 import RoleBadge from './RoleBadge'
 
 export default function ImpactLeaderboard() {
@@ -8,7 +8,7 @@ export default function ImpactLeaderboard() {
   const navigate = useNavigate()
 
   const players = (data?.playerSummaries ?? [])
-    .filter(p => p.team === UCLA_TEAM)
+    .filter(p => p.team === FOCAL_TEAM)
     .sort((a, b) => b.impact - a.impact)
 
   const maxImpact = Math.max(players[0]?.impact ?? 1, 0.0001)
@@ -62,7 +62,7 @@ export default function ImpactLeaderboard() {
               <td className="py-2 px-2 w-36">
                 <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-ucla-blue to-gold"
+                    className="h-full rounded-full bg-gradient-to-r from-focal-blue to-gold"
                     style={{ width: `${Math.max(0, p.impact) / maxImpact * 100}%` }}
                   />
                 </div>

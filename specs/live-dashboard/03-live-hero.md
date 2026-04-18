@@ -15,9 +15,9 @@ sees. **If they can only read one element, it's this.**
 
 Specified:
 
-- Big score (UCLA N — M Opponent).
+- Big score (Team1 N — M Team2).
 - Period + remaining time (if available; else just `Q3`).
-- Full-width score-diff polyline with UCLA-leading area tinted UCLA blue,
+- Full-width score-diff polyline with focal-leading area tinted focal-team blue,
   trailing area tinted red, at 8% opacity.
 - Three most-recent events as colored pills.
 - Staleness badge in the corner.
@@ -89,7 +89,7 @@ access). Computes `events = eventsForLiveGame(data.rawEvents, game)` and
 ┌────────────────────────────────────────────────────────────┐   ← optional gold clutch rail (3px)
 │  🔴 LIVE  ·  Q3  ·  12 events         [StalenessBadge]     │
 │                                                            │
-│          UCLA   9   —   8   STANFORD                       │
+│          Team1  9   —   8   Team2                          │
 │                                                            │
 │  [full-width SVG polyline, 120px tall]                     │
 │                                                            │
@@ -101,7 +101,7 @@ access). Computes `events = eventsForLiveGame(data.rawEvents, game)` and
 - `ClutchRail` absolutely positioned at top `0` with `h-1 bg-gold` when `clutch === true`.
 - Score: `text-6xl font-extrabold` for each team's numeral. Team name labels
   below in `text-muted text-xs uppercase tracking-wider`. Winning side (higher
-  score) gets `text-ucla-blue` / `text-red-400` based on `uclaLeading`.
+  score) gets `text-focal-blue` / `text-red-400` based on `focalLeading`.
 - Quarter strip: `text-sm text-muted` with a small red pulsing dot to the
   left of "LIVE" when `data` has updated in the last 3 seconds (reuse the
   staleness timing logic).
@@ -117,7 +117,7 @@ GameCard:
 - Zero line: `<line stroke={colors.slate500} strokeOpacity={0.4} />`.
 - Quarter gridlines: 3 lines at 25%, 50%, 75% in `colors.border` (faint).
 - **Two filled areas (new vs GameCard):** a path above the zero line filled
-  `colors.uclaBlue` at 8% opacity, below filled `colors.red400` at 8% opacity.
+  `colors.focalBlue` at 8% opacity, below filled `colors.red400` at 8% opacity.
   Compose with a second polyline `points` including `${W},${mid}` and `0,${mid}`
   to close the shape.
 - Polyline itself: `stroke={colors.sky400}` (live blue), `strokeWidth={2.5}`.
@@ -143,7 +143,7 @@ right). Each pill:
   - Positive (goal, steal, save, field_block, earned_*) → `bg-green-900/30 text-green-300 border-green-900`.
   - Negative (miss, excluded, penalty_committed, offensive) → `bg-red-900/30 text-red-300 border-red-900`.
   - Neutral (sprint_won, other) → `bg-slate-700 text-slate-300 border-slate-600`.
-- UCLA events get a left border stripe in `colors.uclaBlue`, opponent events in `colors.red400`.
+- Focal-team events get a left border stripe in `colors.focalBlue`, opponent events in `colors.red400`.
 
 If `events.length === 0`, render "— awaiting events —" in muted.
 
@@ -164,7 +164,7 @@ Clutch logic lives inside `LiveHero`:
 ```ts
 const clutch =
   quarter.quarter === 'Q4' &&
-  Math.abs(game.uclaScore - game.oppScore) <= 1
+  Math.abs(game.focalScore - game.oppScore) <= 1
 ```
 
 ### 4.6 Animation discipline
@@ -223,7 +223,7 @@ Title: feat(live): LiveHero — score, polyline, ribbon, staleness, clutch rail
 
 ## Summary
 - Pinned live hero with big score, Q-label, full-width polyline
-- UCLA-leading area tinted blue, trailing tinted red (8% opacity)
+- Focal-leading area tinted blue, trailing tinted red (8% opacity)
 - Last-3 events pill ribbon with slide-in animation
 - ClutchRail appears automatically when Q4 + |diff| ≤ 1
 - Reuses StalenessBadge from Task 01
@@ -243,7 +243,7 @@ Title: feat(live): LiveHero — score, polyline, ribbon, staleness, clutch rail
 
 Flag as BLOCKING if any:
 
-- Score displayed with wrong side (`uclaIsScoreA` not honored).
+- Score displayed with wrong side (`focalIsScoreA` not honored).
 - Clutch rail triggered outside Q4 or with |diff| > 1.
 - Polyline crashes on empty `timeline`.
 - Inline hex anywhere — must import from `src/theme/colors.ts`.
