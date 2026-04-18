@@ -1,19 +1,27 @@
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '../../store/useAppStore'
 import { computeScoreTimeline } from '../../lib/computeScoreTimeline'
-import type { GameId } from '../../types'
-import { GAME_LABELS, GAME_NAMES, GAME_SCORES, UCLA_TEAM } from '../../types'
+import type { LiveGame } from '../../lib/gamesFromData'
+import { UCLA_TEAM } from '../../types'
 
 interface Props {
-  gameId: GameId
+  game: LiveGame
 }
 
-export default function GameCard({ gameId }: Props) {
+export default function GameCard({ game }: Props) {
   const navigate = useNavigate()
   const data = useAppStore(s => s.data)
-  const { uclaScore, oppScore, win } = GAME_SCORES[gameId]
+  const { gameId, title, uclaScore, oppScore, oppTeam, isLive } = game
+  const win = uclaScore > oppScore
+  const resultClass = isLive ? 'text-sky-400' : win ? 'text-green-400' : 'text-red-400'
+  const badgeClass = isLive
+    ? 'bg-sky-900/40 text-sky-300 border-sky-900'
+    : win
+      ? 'bg-green-900/20 text-green-400 border-green-900'
+      : 'bg-red-900/20 text-red-400 border-red-900'
+  const badgeLabel = isLive ? 'LIVE' : win ? 'W' : 'L'
 
-  const timeline = data ? computeScoreTimeline(data.rawEvents, gameId) : []
+  const timeline = data ? computeScoreTimeline(data.rawEvents, game) : []
 
   const W = 200
   const H = 32
@@ -29,7 +37,7 @@ export default function GameCard({ gameId }: Props) {
         .join(' ')
     : `0,${mid} ${W},${mid}`
 
-  const gameEvents = data?.rawEvents.filter(e => e.game === GAME_NAMES[gameId]) ?? []
+  const gameEvents = data?.rawEvents.filter(e => e.game === title) ?? []
   const uclaEvents = gameEvents.filter(e => e.team === UCLA_TEAM)
   const goals = uclaEvents.filter(e => e.event_type === 'goal' || e.event_type === 'goal_penalty').length
   const steals = uclaEvents.filter(e => e.event_type === 'steal').length
@@ -38,6 +46,8 @@ export default function GameCard({ gameId }: Props) {
   ).length
   const shotPct = shots > 0 ? ((goals / shots) * 100).toFixed(1) + '%' : '—'
 
+  const strokeColor = isLive ? '#38bdf8' : win ? '#4ade80' : '#f87171'
+
   return (
     <div
       onClick={() => navigate(`/game/${gameId}`)}
@@ -45,19 +55,13 @@ export default function GameCard({ gameId }: Props) {
     >
       <div className="flex justify-between items-start mb-2">
         <div>
-          <div className="text-xs font-bold text-muted">{GAME_LABELS[gameId]}</div>
-          <div className={`text-xl font-extrabold ${win ? 'text-green-400' : 'text-red-400'}`}>
+          <div className="text-xs font-bold text-muted">vs {oppTeam}</div>
+          <div className={`text-xl font-extrabold ${resultClass}`}>
             {uclaScore} – {oppScore}
           </div>
         </div>
-        <span
-          className={`text-xs font-bold px-2 py-0.5 rounded border ${
-            win
-              ? 'bg-green-900/20 text-green-400 border-green-900'
-              : 'bg-red-900/20 text-red-400 border-red-900'
-          }`}
-        >
-          {win ? 'W' : 'L'}
+        <span className={`text-xs font-bold px-2 py-0.5 rounded border ${badgeClass}`}>
+          {badgeLabel}
         </span>
       </div>
 
@@ -79,7 +83,7 @@ export default function GameCard({ gameId }: Props) {
           <polyline
             points={points}
             fill="none"
-            stroke={win ? '#4ade80' : '#f87171'}
+            stroke={strokeColor}
             strokeWidth={1.5}
             strokeLinecap="round"
             strokeLinejoin="round"

@@ -92,7 +92,8 @@ export interface AppData {
 }
 
 export type GameId = 'ucdavis' | 'sjsu' | 'stanford'
-export type GameFilter = 'all' | GameId
+// GameFilter widened to string so live-mode novel opponents can be filter values
+export type GameFilter = string
 
 // Exact game name strings as they appear in the `game` column of Raw PBP
 export const GAME_NAMES: Record<GameId, string> = {

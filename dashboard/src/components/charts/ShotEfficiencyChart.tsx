@@ -1,15 +1,15 @@
 import { useAppStore } from '../../store/useAppStore'
-import { UCLA_TEAM, GAME_IDS, OPP_TEAMS } from '../../types'
+import { UCLA_TEAM } from '../../types'
 
 export default function ShotEfficiencyChart() {
   const data = useAppStore(s => s.data)
   const teams = data?.teamMetrics ?? []
 
   const ucla = teams.find(t => t.team === UCLA_TEAM)
-  const opponents = GAME_IDS.map(id => teams.find(t => t.team === OPP_TEAMS[id])).filter(Boolean)
+  const opponents = teams.filter(t => t.team !== UCLA_TEAM)
   const allTeams = [
-    { team: 'UCLA Bruins', shot_pct: ucla?.shot_pct ?? 0, isUcla: true },
-    ...opponents.map(t => ({ team: t!.team, shot_pct: t!.shot_pct, isUcla: false })),
+    { team: UCLA_TEAM, shot_pct: ucla?.shot_pct ?? 0, isUcla: true },
+    ...opponents.map(t => ({ team: t.team, shot_pct: t.shot_pct, isUcla: false })),
   ]
 
   const maxPct = Math.max(...allTeams.map(t => t.shot_pct))

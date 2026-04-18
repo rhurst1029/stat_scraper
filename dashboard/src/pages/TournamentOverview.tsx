@@ -5,9 +5,14 @@ import ImpactLeaderboard from '../components/leaderboard/ImpactLeaderboard'
 import ShotEfficiencyChart from '../components/charts/ShotEfficiencyChart'
 import QuarterMomentumChart from '../components/charts/QuarterMomentumChart'
 import GameCard from '../components/charts/GameCard'
-import { GAME_IDS } from '../types'
+import { useAppStore } from '../store/useAppStore'
+import { extractGames } from '../lib/gamesFromData'
 
 export default function TournamentOverview() {
+  const data = useAppStore(s => s.data)
+  const games = data ? extractGames(data.rawEvents) : []
+  const gridCols = games.length === 1 ? 'grid-cols-1' : games.length === 2 ? 'grid-cols-2' : 'grid-cols-3'
+
   return (
     <div className="min-h-screen bg-dark-bg">
       <NavBar />
@@ -28,9 +33,9 @@ export default function TournamentOverview() {
             <div className="flex-1 h-px bg-border" />
             <span className="text-[10px] text-slate-600">Click a card to view game →</span>
           </div>
-          <div className="grid grid-cols-3 gap-4">
-            {GAME_IDS.map(id => (
-              <GameCard key={id} gameId={id} />
+          <div className={`grid ${gridCols} gap-4`}>
+            {games.map(g => (
+              <GameCard key={g.gameId} game={g} />
             ))}
           </div>
         </div>
