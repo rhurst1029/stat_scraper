@@ -41,6 +41,9 @@ ENV/
 # Agent scratch space
 .superpowers/
 
+# Git worktrees (local agent workspaces)
+worktrees/
+
 # IDE specific files
 .idea/
 .vscode/
