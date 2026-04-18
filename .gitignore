@@ -34,8 +34,12 @@ wheels/
 
 # Virtual Environment
 venv/
+.venv/
 env/
 ENV/
+
+# Agent scratch space
+.superpowers/
 
 # IDE specific files
 .idea/

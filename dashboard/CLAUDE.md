@@ -1,6 +1,8 @@
-# Dashboard — UCLA Pacific Cup Analytics
+# Dashboard — Water Polo Tournament Analytics
 
-A coach-grade water polo analytics dashboard for the UCLA Bruins' Pacific Cup tournament (3 games vs UC Davis, SJSU, Stanford). Static single-page React app, deployed to GitHub Pages, loading `PERFORMANCE_REPORT.xlsx` client-side via SheetJS. This file is the single source of truth for design, implementation, and ops. It replaces the earlier `PACIFIC_CUP_UI_DESIGN_SPEC.md`, design doc, and implementation plan.
+A coach-grade water polo analytics dashboard for a single tournament (N games of a focal team vs opponents). Static single-page React app, deployed to GitHub Pages, loading `PERFORMANCE_REPORT.xlsx` client-side via SheetJS. This file is the single source of truth for design, implementation, and ops.
+
+> **Terminology used in this doc:** `Team1` is the focal team being analyzed. `Team2`, `Team3`, `Team4`, … are its opponents in the tournament, in schedule order. Specific tournament configuration (names, schedules, scores) lives in `src/types/index.ts` — swap the values there to retarget the dashboard to a different tournament.
 
 ---
 
@@ -50,15 +52,15 @@ Testing:     Vitest + React Testing Library + jsdom
 Deployment:  Custom scripts/deploy.sh — clean orphan branch force-push to gh-pages
 ```
 
-UCLA palette (defined in `tailwind.config.js`):
+Palette (defined in `tailwind.config.js`):
 
 ```
-ucla-blue:  #2774AE
-gold:       #FFD100
-dark-bg:    #0f172a
-card-bg:    #1e293b
-border:     #334155
-muted:      #94a3b8
+primary-blue:  #2774AE   ← focal team accent (named `ucla-blue` in the current config; rename if retargeting)
+gold:          #FFD100
+dark-bg:       #0f172a
+card-bg:       #1e293b
+border:        #334155
+muted:         #94a3b8
 ```
 
 ---
@@ -75,7 +77,7 @@ dashboard/
     deploy.sh                        ← clean orphan → gh-pages
   src/
     types/
-      index.ts                       ← all shared TS types + constants (GAME_IDS, GAME_SCORES, OPP_TEAMS, UCLA_TEAM, etc.)
+      index.ts                       ← all shared TS types + tournament constants (GAME_IDS, GAME_SCORES, OPP_TEAMS, FOCAL_TEAM, etc.)
     lib/
       parseWorkbook.ts               ← SheetJS WorkBook → typed AppData
       computeScoreTimeline.ts        ← per-game score-diff array from Raw PBP
@@ -85,7 +87,7 @@ dashboard/
       LoadingScreen.tsx
       layout/
         NavBar.tsx                   ← sticky nav + tabs
-        FilterPills.tsx              ← All / vs UC Davis / vs SJSU / vs Stanford
+        FilterPills.tsx              ← All / vs Team2 / vs Team3 / vs Team4
         HeroBar.tsx                  ← Record, Goals, Shot%, Steals, Saves, Earned Excl.
       leaderboard/
         RoleBadge.tsx
@@ -165,24 +167,23 @@ interface AppData {
   rawEvents: RawEvent[];
 }
 
-type GameId = 'ucdavis' | 'sjsu' | 'stanford';
+type GameId = 'game1' | 'game2' | 'game3';   // one slug per game in the tournament
 ```
 
-Canonical constants (also in `src/types/index.ts`):
+Canonical tournament-config constants (also in `src/types/index.ts`):
 
 ```typescript
-GAME_IDS:   ['ucdavis', 'sjsu', 'stanford']
-GAME_NAMES: { ucdavis: 'UC Davis Aggies VS UCLA Bruins',
-              sjsu: 'UCLA Bruins VS SJSU Spartans',
-              stanford: 'UCLA Bruins VS Stanford Cardinal' }
-GAME_LABELS: { ucdavis: 'vs UC Davis', sjsu: 'vs SJSU', stanford: 'vs Stanford' }
-UCLA_IS_SCORE_A: { ucdavis: false, sjsu: true, stanford: true }
-GAME_SCORES: { ucdavis: { uclaScore: 14, oppScore: 7,  win: true  },
-               sjsu:    { uclaScore: 11, oppScore: 10, win: true  },
-               stanford:{ uclaScore: 11, oppScore: 12, win: false } }
-OPP_TEAMS:   { ucdavis: 'UC Davis Aggies', sjsu: 'SJSU Spartans',
-               stanford: 'Stanford Cardinal' }
-UCLA_TEAM:   'UCLA Bruins'
+GAME_IDS:   ['game1', 'game2', 'game3']
+GAME_NAMES: { game1: 'Team2 VS Team1',
+              game2: 'Team1 VS Team3',
+              game3: 'Team1 VS Team4' }
+GAME_LABELS: { game1: 'vs Team2', game2: 'vs Team3', game3: 'vs Team4' }
+FOCAL_IS_SCORE_A: { game1: false, game2: true, game3: true }  // is Team1 `score_a` in this game?
+GAME_SCORES: { game1: { focalScore: 14, oppScore: 7,  win: true  },
+               game2: { focalScore: 11, oppScore: 10, win: true  },
+               game3: { focalScore: 11, oppScore: 12, win: false } }
+OPP_TEAMS:   { game1: 'Team2', game2: 'Team3', game3: 'Team4' }
+FOCAL_TEAM:  'Team1'
 ```
 
 ### Derived data
@@ -190,13 +191,13 @@ UCLA_TEAM:   'UCLA Bruins'
 Some values are computed at render time, not pre-stored:
 
 - **Per-game player stats** — filter `rawEvents` by `game` column + `event_type` (no per-game summary in the xlsx).
-- **Score diff timeline per game** — `computeScoreTimeline(rawEvents, gameId)` returns `{ eventIndex, scoreDiff }[]`, with `scoreDiff > 0` meaning UCLA leading.
+- **Score diff timeline per game** — `computeScoreTimeline(rawEvents, gameId)` returns `{ eventIndex, scoreDiff }[]`, with `scoreDiff > 0` meaning Team1 leading.
 - **Tournament record** — derived from `GAME_SCORES` (`wins-losses`), not hardcoded.
 
 ### Data gotchas
 
 - **Time column is sparse** — most rows show `--:--`. Charts use **sequential event index** as the X-axis proxy, not clock time.
-- **UCLA is `score_a` for SJSU and Stanford, `score_b` for UC Davis** — because UC Davis is listed first in that game's title. Use `UCLA_IS_SCORE_A` to disambiguate.
+- **The focal team may be `score_a` or `score_b`** — depending on which team is listed first in the raw data's `game` column. Use `FOCAL_IS_SCORE_A` to disambiguate.
 - **Roles are parsed from Python list literal strings** — `"['Primary Finisher', 'Disruptor']"` → `['Primary Finisher', 'Disruptor']`. Current parser splits on commas; a role name containing a comma would break silently (no such roles today).
 
 ---
@@ -219,9 +220,9 @@ Routes use React Router v7 with `basename: '/stat_scraper'` (the GitHub Pages re
 
 Every page renders the same top stack:
 
-- **NavBar** — `UCLA WATER POLO · Pacific Cup 2026` branding + tabs (Overview · Games · Players · Play-by-Play). Sticky top.
-- **FilterPills** — `All Games · vs UC Davis · vs SJSU · vs Stanford`. Global game filter in Zustand (`gameFilter`).
-- **HeroBar** — Record (2-1) · UCLA Goals · Shot% · Steals · Saves · Earned Excl. + three game result badges.
+- **NavBar** — branding (focal team + tournament) + tabs (Overview · Games · Players · Play-by-Play). Sticky top.
+- **FilterPills** — `All Games · vs Team2 · vs Team3 · vs Team4`. Global game filter in Zustand (`gameFilter`).
+- **HeroBar** — Record (e.g. 2-1) · Team1 Goals · Shot% · Steals · Saves · Earned Excl. + one game result badge per game.
 
 ### Drill-down navigation map
 
@@ -241,7 +242,7 @@ Game View (/game/:gameId)
 └── Top nav / breadcrumb             → Overview or Games list
 
 Player Profile (/player/:name)
-├── "Game: vs Stanford" segment bar  → /game/stanford
+├── "Game: vs Team4" segment bar     → /game/game3
 ├── Event in event feed              → /play-by-play?player=X&game=Y
 └── Top nav / breadcrumb             → Overview or Players list
 
@@ -253,7 +254,7 @@ Play-by-Play Explorer (/play-by-play)
 
 ### Breadcrumbs
 
-Each page below Overview shows a one-level breadcrumb (e.g. `Overview → Game: vs Stanford`, `Overview → ben larsen`). Clicking the `Overview` segment navigates back. No multi-level breadcrumbs for v1.
+Each page below Overview shows a one-level breadcrumb (e.g. `Overview → Game: vs Team4`, `Overview → player name`). Clicking the `Overview` segment navigates back. No multi-level breadcrumbs for v1.
 
 ---
 
@@ -263,56 +264,50 @@ Each page below Overview shows a one-level breadcrumb (e.g. `Overview → Game: 
 
 Single-column scroll. Sections in order:
 
-1. **Hero bar** — Record, Goals, Shot%, Steals, Saves, Earned Excl., game result badges (UC Davis W 14–7, SJSU W 11–10, Stanford L 11–12).
+1. **Hero bar** — Record, Goals, Shot%, Steals, Saves, Earned Excl., game result badges (e.g. Team2 W 14–7, Team3 W 11–10, Team4 L 11–12).
 2. **Impact Leaderboard** — ranked table, percentile gradient bars, role badges, clickable player names. Sort by `impact` desc.
 3. **Shot Efficiency + Quarter Momentum** — side-by-side in a 2-column row.
-   - Shot Efficiency: plain Tailwind bars, UCLA first, then opponents in tournament order (derived from `GAME_IDS.map(id => OPP_TEAMS[id])`). Opponents that out-shot UCLA rendered red.
-   - Quarter Momentum: Recharts grouped bars — UCLA goals per quarter vs opponent average (count of distinct opponent teams, not hardcoded /3). Best quarter highlighted gold.
-4. **Game Score Timelines** — 3-column grid of game cards with inline SVG score-diff polylines, key stats (shot%, steals), clickable to Game View.
+   - Shot Efficiency: plain Tailwind bars, Team1 first, then opponents in tournament order (derived from `GAME_IDS.map(id => OPP_TEAMS[id])`). Opponents that out-shot Team1 rendered red.
+   - Quarter Momentum: Recharts grouped bars — Team1 goals per quarter vs opponent average (count of distinct opponent teams, not hardcoded). Best quarter highlighted gold.
+4. **Game Score Timelines** — N-column grid of game cards with inline SVG score-diff polylines, key stats (shot%, steals), clickable to Game View.
 
 ### 7.2 Game View (Phase 2)
 
-One page per game. Tab strip at top. `gameId` slugs: `ucdavis | sjsu | stanford`.
+One page per game. Tab strip at top. `gameId` slugs come from `GAME_IDS`.
 
-- **Game Header** — `UCLA 13 — UC Davis 7` score, shot% UCLA vs opponent, steals (possession proxy), earned exclusions converted.
+- **Game Header** — `Team1 13 — Team2 7` score, shot% Team1 vs opponent, steals (possession proxy), earned exclusions converted.
 - **Win Probability Timeline (full-width)** — Recharts `LineChart` of running `score_diff`, normalized. Features:
   - Draggable scrubber on X-axis → shows "what the game looked like at this moment."
   - Gold overlay band on Q4 clutch window (`score ≤ ±2`).
   - Clickable event markers → popup with full event detail.
-- **Quarter Performance Grid** — 4-column card grid (Q1–Q4). Each card: UCLA goals/shots/shot%, opponent goals/shots/shot%, UCLA disruption score (steals + blocks). Color-coded green/red/yellow for quarter winner.
-- **Score State Performance Table** — 3 rows (Leading / Tied / Trailing), UCLA vs opponent stats per state. Auto-generated insight callout ("UCLA shot 52% when leading, 28% when trailing").
+- **Quarter Performance Grid** — 4-column card grid (Q1–Q4). Each card: Team1 goals/shots/shot%, opponent goals/shots/shot%, Team1 disruption score (steals + blocks). Color-coded green/red/yellow for quarter winner.
+- **Score State Performance Table** — 3 rows (Leading / Tied / Trailing), Team1 vs opponent stats per state. Auto-generated insight callout ("Team1 shot 52% when leading, 28% when trailing").
 - **Per-Game Player Impact** — same layout as tournament leaderboard, filtered to this game's raw events.
-- **Key Sequences Panel** — auto-detect runs (3+ consecutive positive UCLA events) and exclusion sequences (`earned_exclusion` → `goal_6on5` within N events). Compact event feed with timestamps + player names.
+- **Key Sequences Panel** — auto-detect runs (3+ consecutive positive Team1 events) and exclusion sequences (`earned_exclusion` → `goal_6on5` within N events). Compact event feed with timestamps + player names.
 
 ### 7.3 Player Profile (Phase 3)
 
-UCLA roster (from data, `team == 'UCLA Bruins'`):
-
-```
-ben larsen, Max Matthews, Nick Tovani, Nate Tauscher, Harper Gardner,
-Harry Tucker, ANDREW SPENCER, Marcell Szecsi, Wade Sherlock, Jackson Harlan,
-Vinnie Merk, Hayden O'Hare
-```
+Focal-team roster is derived from data, filtering `rawEvents` where `team == FOCAL_TEAM`.
 
 - **Player Header** — name, cap number (from raw events, not summary), role badges, large Impact Score, offense/defense split side by side.
-- **Radar Chart** — 6 axes, player polygon (UCLA blue, 40% opacity) vs team average (gold dashed outline):
+- **Radar Chart** — 6 axes, player polygon (primary blue, 40% opacity) vs team average (gold dashed outline):
   1. Shooting Efficiency — `non_pen_pct / max_non_pen_pct`
   2. Shot Volume — `shots / max_shots`
   3. Defensive Disruption — `(steals + field_blocks) / max`
   4. Leverage Creation — `(earned_excl + earned_pen) / max`
   5. Discipline — `1 − (excluded + pen_committed) / max`
   6. Clutch — `clutch_goals / max_clutch`
-- **Event Feed** — chronological list of all events for this player across all 3 games. Columns: Game | Quarter | Score State | Action | Score at Time. Color-coded by event sign. Grouped by game, collapsible.
+- **Event Feed** — chronological list of all events for this player across all games. Columns: Game | Quarter | Score State | Action | Score at Time. Color-coded by event sign. Grouped by game, collapsible.
 - **Situational Splits** — mini table: stats by quarter (Q1–Q4) and by score state (Leading / Tied / Trailing). Shows goals, shot%, impact contribution.
-- **Per-Game Comparison Bar** — horizontal stacked bar showing Impact contribution per game. 3 segments color-coded by opponent. Tooltip shows full game stats.
+- **Per-Game Comparison Bar** — horizontal stacked bar showing Impact contribution per game. N segments color-coded by opponent. Tooltip shows full game stats.
 
 ### 7.4 Play-by-Play Explorer (Phase 4)
 
-- **Filter Sidebar** — game selector, team (All / UCLA / Opponent), event type (multi-select pills), quarter, score state, player search, clutch toggle.
+- **Filter Sidebar** — game selector, team (All / Team1 / Opponent), event type (multi-select pills), quarter, score state, player search, clutch toggle.
 - **Event Table** — columns: `Game | Quarter | Score | Score State | Clutch? | Team | Player | Event | Impact Weight`.
-  - UCLA rows in light blue, opponent rows neutral.
+  - Team1 rows in light blue, opponent rows neutral.
   - Positive impact events green-tinted, negative red-tinted.
-  - Sticky header, virtual scroll (use `react-window` `FixedSizeList` for 553 rows).
+  - Sticky header, virtual scroll (use `react-window` `FixedSizeList` for ~500 rows).
 - **CSV export** button on the table (use `papaparse`).
 
 ---
@@ -366,8 +361,8 @@ These are "EPM-adjacent" analytics worth implementing after Phase 4 ships.
 Water polo doesn't log possessions explicitly, but we can approximate:
 
 ```
-UCLA Possessions ≈ goals + misses + turnovers + earned_excl_against_them
-Off Eff = UCLA goals / UCLA possessions             (points-per-possession)
+Team1 Possessions ≈ goals + misses + turnovers + earned_excl_against_them
+Off Eff = Team1 goals / Team1 possessions           (points-per-possession)
 Def Eff = (steals + field_blocks) / opp_possessions (stops-per-possession)
 ```
 
@@ -395,10 +390,10 @@ Analogous to xG-above-expected in soccer. Display as a scatter plot: X = shots (
 Rolling 5-event window across a game:
 
 ```
-momentum[i] = sum(impact_weights[i-4:i+1])  for UCLA events only
+momentum[i] = sum(impact_weights[i-4:i+1])  for Team1 events only
 ```
 
-Line chart, UCLA blue. Companion line for opponent momentum. Crossover points circled.
+Line chart, primary blue. Companion line for opponent momentum. Crossover points circled.
 
 ### 10.5 Clutch Performer Index
 
@@ -406,7 +401,7 @@ Line chart, UCLA blue. Companion line for opponent momentum. Crossover points ci
 CPI = (clutch_goals × 3 + clutch_steals × 2) / clutch_events_total
 ```
 
-Radar of top 5 UCLA players by CPI — "who do you want on the ball in Q4 down 1?"
+Radar of top 5 Team1 players by CPI — "who do you want on the ball in Q4 down 1?"
 
 ---
 
@@ -433,7 +428,7 @@ Never hardcode tournament-specific values (game count, team order, scores, recor
 
 ```tsx
 // ✅ Game-count-agnostic
-const oppTeams = new Set(splits.filter(r => r.team !== UCLA_TEAM).map(r => r.team))
+const oppTeams = new Set(splits.filter(r => r.team !== FOCAL_TEAM).map(r => r.team))
 const oppDivisor = Math.max(1, oppTeams.size)
 
 // ❌ Silently wrong if games change
@@ -523,11 +518,11 @@ The site is served at `https://rhurst1029.github.io/stat_scraper/` — the `stat
 1. **Static site only** — no server, no API. All data is parsed from xlsx at load time.
 2. **Responsive target is 13" laptop (1280px).** Mobile is not a v1 requirement.
 3. **Dark mode only** for v1. Light-mode toggle is parked.
-4. **Goalie rotation is simplified.** Both Tovani and Tauscher are tagged `Goalie Anchor` — a GK-minutes split is a parking-lot item.
+4. **Goalie rotation is simplified.** Multiple goalies on the same team tagged `Goalie Anchor` — a GK-minutes split is a parking-lot item.
 5. **Phase 1 patterns are canonical.** New phases should match existing conventions (selector-based store access, derive-from-canonical, guarded math, TDD for lib modules).
 6. **Per-game player stats must be derived** — the xlsx only has tournament-aggregate player stats. Per-game requires filtering `rawEvents` by `game` + `event_type`.
 7. **Time data is sparse** — most rows show `--:--`. Charts use event-index as X-axis, not clock time.
-8. **Routing basename** — `/stat_scraper`. Game IDs are slugs: `ucdavis`, `sjsu`, `stanford`.
+8. **Routing basename** — `/stat_scraper`. Game IDs are slugs drawn from `GAME_IDS`.
 9. **gh-pages is force-pushed on every deploy** — don't store anything there that needs to survive.
 
 ---
@@ -546,8 +541,8 @@ The site is served at `https://rhurst1029.github.io/stat_scraper/` — the `stat
 
 ## 16. Open Questions (Answer Before Starting a New Phase)
 
-1. **Static vs live data** — confirmed static. Tournament is complete; data doesn't change.
+1. **Static vs live data** — confirmed static for the shipped build. Tournament is complete; data doesn't change. (A live-polling variant is specified separately.)
 2. **Per-game player stats** — must be derived from Raw PBP (not pre-computed in xlsx).
 3. **Time column** — use event sequence index as X-axis proxy, not clock.
-4. **Goalie rotation** — treat both goalies as "Goalie Anchor" for now; GK-minutes toggle is v2.
-5. **Opponent player comparisons** — shown on Game View, hidden on Tournament Overview (UCLA-focused).
+4. **Goalie rotation** — treat all tagged goalies as "Goalie Anchor" for now; GK-minutes toggle is v2.
+5. **Opponent player comparisons** — shown on Game View, hidden on Tournament Overview (focal-team-focused).

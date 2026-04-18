@@ -1,5 +1,74 @@
-# CLAUDE.md — ~/projects/ Parent Directory
-## ADHD-Aware Development Partner Protocol v1.0
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+---
+
+# Part 1: Codebase Reference
+
+## What This Repo Does
+
+Web scraper pipeline that pulls water polo play-by-play data from two sources (Total Water Polo and 6-8 Sports), exports `.xlsx` files per game, and feeds a downstream AWS/Tableau analytics stack.
+
+## Running the Scrapers
+
+```bash
+# Activate environment (venv or .venv)
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run TWP (Total Water Polo) scraper
+python twp_scraper.py
+
+# Run 6-8 Sports scraper
+python 6_8_scraper.py
+
+# Extract game links from 6-8 Sports schedule page (diagnostic)
+python get_pbp_links.py
+```
+
+No CLI args — target URLs and output paths are hardcoded in each file's `__main__` block. Edit them directly.
+
+## Architecture
+
+Four files, no shared modules:
+
+| File | Role |
+|---|---|
+| `twp_scraper.py` | Scrapes TWP matches: navigates tabs, extracts Q1–Q4 events, team logos, scores → `.xlsx` per match |
+| `6_8_scraper.py` | Scrapes 6-8 Sports: clicks quarter buttons, parses play tables, exports per-game `.xlsx` |
+| `twp_constructor.py` | Link discovery: scans TWP match IDs 1–15000 via Playwright, caches results in `match_links.json` |
+| `get_pbp_links.py` | One-off script for inspecting DOM to find game href/routerLink attributes on 6-8 Sports |
+
+**Browser automation:** Both Selenium (Chrome, primary) and Playwright (Chromium, used only in `twp_constructor.py`) are in use. `fake-useragent` randomizes headers to avoid bot detection.
+
+**Data flow:** `__main__` iterates a list of URLs → per-game scrape function → pandas DataFrame → `.xlsx`. No database or API calls — everything is file-based locally.
+
+**TWP link cache:** `match_links.json` maps competition name → list of match URLs. Refresh with `TWPConstructor(get_fresh_links=True)`.
+
+**6-8 Sports active mode:** `get_play_by_play(url, date)` is the live path. `get_games()` (schedule scraping) is currently commented out because it still passes the old `driver` argument — needs re-wiring before use.
+
+## Key Output Schema
+
+Both scrapers produce DataFrames with these core columns (names vary slightly by source):
+
+`Time | Team | Cap Number | Player Name | Action Detail | Score | Quarter`
+
+TWP adds: `competition_name`, `match_details`, `game_url`, `final_score`
+6-8 Sports adds: `Game` (formatted match name)
+
+## Known Gotchas
+
+- `6_8_scraper.py` imports `playwright` at the top but never uses it — dead import.
+- Quarter detection on 6-8 Sports filters `ng-star-inserted` elements by text (`1st Quarter`, etc.) — the old `arrow-down` class selector no longer works.
+- OT/Shootout periods are not handled — the quarter loop only covers Q1–Q4.
+- ChromeDriver is auto-managed by `webdriver-manager`; no manual driver install needed.
+
+---
+
+# Part 2: ADHD-Aware Development Partner Protocol v1.0
 
 > This file governs ALL sessions across ALL projects in this directory.
 > Read this file in full at the start of every session before doing anything else.

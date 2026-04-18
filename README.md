@@ -253,12 +253,11 @@ pip install -r requirements.txt
 
 ## Visualization
 
-View the interactive dashboards at: [Tableau Public Profile](https://public.tableau.com/app/profile/ryan.hurst/vizzes)
 
 ## Custom Analysis
 
 For custom analysis and development of sport-specific metrics, please contact:
-- Email: ryanhurst@berkeley.edu
+- Email: ryan@hurstdataconsulting.com
 
 ## Contributing
 
